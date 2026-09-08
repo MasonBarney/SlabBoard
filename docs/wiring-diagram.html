@@ -518,7 +518,7 @@
         <caption>Power &amp; reset — both halves</caption>
         <thead><tr><th>Function</th><th>Pad</th></tr></thead>
         <tbody>
-          <tr><td>Battery +/&minus;</td><td class="pin">B+ / B&minus;</td></tr>
+          <tr><td>Battery +/&minus;</td><td class="pin">B+ / B&minus; &mdash; small holes</td></tr>
           <tr><td>On/off switch</td><td class="pin">inline on battery + lead</td></tr>
           <tr><td>Reset button</td><td class="pin">RST &rarr; GND</td></tr>
         </tbody>
@@ -852,7 +852,7 @@
       </figure>
 
       <figure>
-        <svg viewBox="0 0 460 230" role="img" aria-label="Battery, switch and reset wiring: the battery's positive lead runs through an inline on/off switch before reaching the board's B plus pad, the negative lead runs straight to B minus; separately the RST pad connects through a momentary push button to a GND pad.">
+        <svg viewBox="0 0 460 230" role="img" aria-label="Battery, switch and reset wiring: the battery's positive lead runs through an inline on/off switch before reaching the board's B plus hole, the negative lead runs straight to B minus; separately the RST pin connects through a momentary push button to a GND pin.">
           <text x="30" y="40" class="schem-label">3.7V LiPo</text>
           <line x1="20" y1="50" x2="55" y2="50" class="schem-line"/>
           <line x1="55" y1="34" x2="55" y2="66" class="schem-line" stroke-width="3"/>
@@ -886,10 +886,11 @@
           <line x1="230" y1="180" x2="300" y2="180" class="schem-line"/>
         </svg>
         <figcaption>
-          The nice!nano charges the battery through its <code>B+</code>/<code>B&minus;</code> pads whenever USB-C
-          is connected, so the switch only needs to sit inline on the battery's positive lead — splice it in with
-          heat-shrink, it doesn't touch any header pin. Reset is separate: a momentary push button bridges RST
-          to GND.
+          The nice!nano charges the battery through its <code>B+</code>/<code>B&minus;</code> holes whenever
+          USB-C is connected, so the switch only needs to sit inline on the battery's positive lead — splice it
+          in with heat-shrink, it doesn't touch any header pin. Reset is separate: a momentary push button
+          bridges RST to GND. Note that <code>B+</code> and <code>B&minus;</code> are <b>smaller than the
+          header holes</b>; see the note below if your battery lead will not pass through.
         </figcaption>
       </figure>
     </div>
@@ -925,6 +926,12 @@
           doesn't, leave P1.11 unused on the left half and poll the trackpad over I&sup2;C instead.</li>
         <li><b>EC12 leg order varies by part.</b> Confirm which of the five legs is the shared common (C) with a
           continuity beep before soldering — on most EC12s it's the centre pin of each 3-pin group, but check yours.</li>
+        <li><b>Thick battery wire will not fit <code>B+</code>/<code>B&minus;</code>.</b> Those two holes are
+          smaller than the header ones. You do not have to thread the wire through: tin the ring around the hole,
+          tin the lead, and solder the wire flat against it, then anchor the wire to the board so nothing tugs the
+          joint. Cleaner still, solder a short thin pigtail to the hole and splice your thicker lead to that under
+          heat-shrink, so the flex lives in the splice rather than the joint. Current here is small — the charger
+          runs around 100&nbsp;mA and the keyboard idles in the tens — so a thin conductor is not a compromise.</li>
         <li><b>Battery polarity is not user-serviceable.</b> Double-check +/&minus; against the
           <code>B+</code>/<code>B&minus;</code> silkscreen before connecting — reversed polarity can damage the
           charge circuit.</li>

@@ -108,7 +108,7 @@ sits at I²C address `0x74` on `i2c0`. No reset line is wired — the driver tre
 
 | Function | Pad |
 |---|---|
-| Battery +/− | `B+` / `B−` pads |
+| Battery +/− | `B+` / `B−` — small holes |
 | On/off switch | inline on the battery's positive lead |
 | Reset button | RST → GND |
 
@@ -127,5 +127,12 @@ sits at I²C address `0x74` on `i2c0`. No reset line is wired — the driver tre
   square SWD/SWC contacts beside them *are* surface pads, for programming; leave them.
 - **EC12 leg order varies by part.** Confirm the shared common with a continuity
   beep before soldering.
+- **Thick battery wire will not fit `B+`/`B−`.** Those two holes are smaller than
+  the header ones. You do not have to thread the wire through: tin the ring around
+  the hole, tin the lead, and solder the wire flat against it, then anchor the wire
+  so nothing tugs the joint. Cleaner still, solder a short thin pigtail to the hole
+  and splice the thicker lead to that under heat-shrink. Current here is small — the
+  charger runs around 100 mA and the keyboard idles in the tens — so a thin conductor
+  costs nothing.
 - **Diode direction must be consistent across all 60 keys** and must match
   `diode-direction = "col2row"` in the shield, or nothing will register.

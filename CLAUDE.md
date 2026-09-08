@@ -70,7 +70,9 @@ throughout — keep it that way.
 Three more GPIO — `P1.01`, `P1.02`, `P1.07` — are brought out as plated through-holes
 set inboard of the two edge headers, not on them. They are ordinary holes the same size
 as the header ones, so they solder the same way. The small square SWD/SWC contacts beside
-them are true surface pads, for programming only. `B+`/`B−` carry the battery.
+them are true surface pads, for programming only. `B+`/`B−` carry the battery and are
+through-holes too, but **smaller than the header holes** — thick battery leads will not
+pass through them.
 
 **Orientation**: labels are printed on the **bottom**. Read a pinout with the labels
 facing you and USB-C pointing away — RAW falls on the left, `P0.06` on the right.

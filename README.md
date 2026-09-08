@@ -54,8 +54,11 @@ to undo — `slabboard_right.overlay` marks the spot.
   matrix position; it needs a `zmk,kscan-gpio-direct` plus `kscan-composite` and a
   61st keymap entry.
 
-See [`CLAUDE.md`](CLAUDE.md) for the full pin reference, the nice!nano silkscreen
-mapping, and build notes.
+[`docs/`](docs/) has the full wiring reference — rendered pinout diagrams for both
+halves, complete pin tables, and the standalone HTML page with the diode/matrix and
+battery schematics.
+
+See [`CLAUDE.md`](CLAUDE.md) for the nice!nano silkscreen mapping and build notes.
 
 ## Layout
 

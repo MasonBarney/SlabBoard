@@ -1,0 +1,917 @@
+<meta charset="utf-8">
+<title>nice!nano Wiring Reference</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#f3f6f0; --panel:#ffffff; --ink:#182a1d; --muted:#5c6d5f;
+    --line:#cfd9cc; --line-strong:#9db09a;
+    --copper:#b5652e; --copper-strong:#8f4f21;
+    --row:#a83c3c; --col:#2b6690; --i2c:#7a4fa3; --spi:#1f7a5c; --enc:#c2703a;
+    --neutral:#3f4d41; --spare:#8b9a8a;
+    --board:#1f3327; --board-edge:#0f1f15; --pad:#e3c07a;
+    --badge-bg:#fbf1e6; --badge-line:#d8b48a;
+    --font-mono:"IBM Plex Mono", ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+    --font-sans:"IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#111a13; --panel:#182419; --ink:#e7efe3; --muted:#9db09a;
+      --line:#2b3b2d; --line-strong:#44603f;
+      --copper:#e0985a; --copper-strong:#f0b077;
+      --row:#e08080; --col:#79b8e6; --i2c:#bd93e6; --spi:#5cd6a3; --enc:#e0a15c;
+      --neutral:#a9bba9; --spare:#6b7c6b;
+      --board:#0e1a12; --board-edge:#060d08; --pad:#e3c07a;
+      --badge-bg:#241a10; --badge-line:#6b4a28;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#111a13; --panel:#182419; --ink:#e7efe3; --muted:#9db09a;
+    --line:#2b3b2d; --line-strong:#44603f;
+    --copper:#e0985a; --copper-strong:#f0b077;
+    --row:#e08080; --col:#79b8e6; --i2c:#bd93e6; --spi:#5cd6a3; --enc:#e0a15c;
+    --neutral:#a9bba9; --spare:#6b7c6b;
+    --board:#0e1a12; --board-edge:#060d08; --pad:#e3c07a;
+    --badge-bg:#241a10; --badge-line:#6b4a28;
+  }
+
+  *{box-sizing:border-box;}
+  body{background:var(--paper); color:var(--ink); margin:0;}
+  .page{max-width:940px; margin:0 auto; padding:2.5rem 1.25rem 5rem;
+        font-family:var(--font-sans); line-height:1.55;}
+  h1,h2,h3{font-family:var(--font-mono); font-weight:700; text-wrap:balance; letter-spacing:-0.01em;}
+
+  .titleblock{border-bottom:2px solid var(--ink); padding-bottom:1.5rem; margin-bottom:2.25rem;}
+  .eyebrow{font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase;
+           letter-spacing:0.14em; color:var(--copper-strong); margin-bottom:0.5rem;}
+  h1{font-size:clamp(1.6rem,4vw,2.2rem); margin:0 0 0.6rem;}
+  .subtitle{max-width:64ch; color:var(--muted); margin:0 0 1.25rem; font-size:0.98rem;}
+  .specs{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.75rem 1.5rem;
+         margin:0; padding:0.9rem 1rem; background:var(--panel); border:1px solid var(--line); border-radius:6px;}
+  .specs div{display:flex; flex-direction:column; gap:0.15rem;}
+  .specs dt{font-family:var(--font-mono); font-size:0.68rem; text-transform:uppercase;
+            letter-spacing:0.08em; color:var(--muted); margin:0;}
+  .specs dd{margin:0; font-weight:600; font-size:0.92rem;}
+
+  section{display:flex; flex-direction:column; gap:1rem; margin-bottom:3rem;}
+  h2{font-size:1.15rem; margin:0; display:flex; align-items:baseline; gap:0.6rem;}
+  h2::after{content:""; flex:1; height:1px; background:var(--line);}
+  .lede{margin:0; max-width:64ch; color:var(--muted); font-size:0.92rem;}
+
+  .viewbadge{display:flex; flex-wrap:wrap; align-items:baseline; gap:0.5rem 0.75rem;
+             font-family:var(--font-mono); font-size:0.8rem;
+             background:var(--badge-bg); border:1px solid var(--badge-line);
+             border-left:4px solid var(--copper); border-radius:4px; padding:0.6rem 0.9rem;}
+  .viewbadge b{color:var(--copper-strong); text-transform:uppercase; letter-spacing:0.1em; font-size:0.74rem;}
+  .viewbadge span{color:var(--muted);}
+
+  .legend-chips{display:flex; flex-wrap:wrap; gap:0.5rem 0.9rem; list-style:none; margin:0; padding:0;
+                font-family:var(--font-mono); font-size:0.82rem;}
+  .legend-chips li{display:flex; align-items:center; gap:0.45rem; padding:0.3rem 0.6rem;
+                   background:var(--panel); border:1px solid var(--line); border-radius:100px;}
+  .swatch{width:0.6rem; height:0.6rem; border-radius:50%; flex:none;}
+  .l-col .swatch{background:var(--col);} .l-row .swatch{background:var(--row);}
+  .l-i2c .swatch{background:var(--i2c);} .l-spi .swatch{background:var(--spi);}
+  .l-enc .swatch{background:var(--enc);} .l-neutral .swatch{background:var(--neutral);}
+  .l-spare .swatch{background:var(--spare);}
+
+  .diagram-wrap{background:var(--panel); border:1px solid var(--line); border-radius:8px;
+                padding:0.75rem; overflow-x:auto;}
+  .diagram-wrap svg{display:block; margin:0 auto; max-width:100%; height:auto; min-width:680px;}
+
+  .silk{font-family:var(--font-mono); font-size:13px; font-weight:700;}
+  .assign{font-family:var(--font-mono); font-size:12.5px; font-weight:600;}
+  .alias{font-family:var(--font-mono); font-size:9.5px; fill:var(--muted); letter-spacing:0.02em;}
+  .leader{stroke-width:1.4;}
+  .leader.spare{stroke-dasharray:2 3;}
+  .pad{fill:var(--pad); stroke:var(--board-edge); stroke-width:0.75;}
+  .dot{stroke:var(--panel); stroke-width:1.2;}
+  .row{stroke:var(--row); fill:var(--row);} .col{stroke:var(--col); fill:var(--col);}
+  .i2c{stroke:var(--i2c); fill:var(--i2c);} .spi{stroke:var(--spi); fill:var(--spi);}
+  .enc{stroke:var(--enc); fill:var(--enc);} .neutral{stroke:var(--neutral); fill:var(--neutral);}
+  .spare{stroke:var(--spare); fill:var(--spare);}
+  .boardbody{fill:var(--board); stroke:var(--board-edge); stroke-width:1.5;}
+  .boardlabel{font-family:var(--font-mono); font-size:13px; fill:var(--pad); letter-spacing:0.04em;}
+  .usbnotch{fill:var(--board-edge);}
+  .usblabel{font-family:var(--font-mono); font-size:8.5px; fill:var(--pad); letter-spacing:0.06em;}
+  .viewnote{font-family:var(--font-mono); font-size:10px; fill:var(--muted); letter-spacing:0.08em;}
+
+  .mini-title{font-family:var(--font-mono); font-size:11px; font-weight:700; fill:var(--ink); letter-spacing:0.1em;}
+  .mini-sub{font-family:var(--font-mono); font-size:10px; fill:var(--muted);}
+  .mini-pin{font-family:var(--font-mono); font-size:10.5px; font-weight:600; fill:var(--ink);}
+  .mini-face{font-family:var(--font-mono); font-size:9.5px; fill:var(--pad); letter-spacing:0.08em;}
+  .mini-tick{stroke:var(--line-strong); stroke-width:1.4;}
+  .mirror-line{stroke:var(--copper); stroke-width:1.6;}
+  .arrowfill{fill:var(--copper);}
+
+  .tables{display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:1.25rem;}
+  table{width:100%; border-collapse:collapse; font-size:0.86rem; background:var(--panel);
+        border:1px solid var(--line); border-radius:6px; overflow:hidden;}
+  caption{caption-side:top; text-align:left; font-family:var(--font-mono); font-size:0.72rem;
+          text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); padding:0.6rem 0.8rem 0.4rem;}
+  th,td{padding:0.45rem 0.8rem; text-align:left; border-top:1px solid var(--line);}
+  th{font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em;
+     color:var(--muted); font-weight:600;}
+  td{font-variant-numeric:tabular-nums;}
+  td.pin{font-family:var(--font-mono); font-weight:700;}
+  td.dt{font-family:var(--font-mono); color:var(--muted); font-size:0.8rem;}
+  thead th{border-top:none;}
+
+  figure{margin:0; background:var(--panel); border:1px solid var(--line); border-radius:8px;
+         padding:1rem; overflow-x:auto;}
+  figure svg{display:block; margin:0 auto; max-width:100%; height:auto;}
+  .mech-grid figure svg{min-width:400px;}
+  figcaption{font-size:0.85rem; color:var(--muted); margin-top:0.75rem; max-width:64ch;}
+  .mech-grid{display:grid; grid-template-columns:1fr; gap:1.75rem;}
+  @media(min-width:780px){ .mech-grid{grid-template-columns:1fr 1fr;} }
+  .schem-label{font-family:var(--font-mono); font-size:12px; fill:var(--muted);}
+  .schem-line{stroke:var(--ink); stroke-width:1.6; fill:none;}
+  .schem-accent{stroke:var(--copper-strong); fill:none; stroke-width:1.6;}
+  .schem-fill{fill:var(--ink);}
+
+  .notes{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:1.1rem 1.3rem;}
+  .notes ul{margin:0; padding-left:1.1rem; display:flex; flex-direction:column; gap:0.55rem; font-size:0.92rem;}
+  .notes li::marker{color:var(--copper-strong);}
+  .notes b{color:var(--ink);}
+  code{font-family:var(--font-mono); font-size:0.88em; background:var(--paper);
+       border:1px solid var(--line); border-radius:3px; padding:0.05em 0.3em;}
+
+  footer{color:var(--muted); font-size:0.8rem; font-family:var(--font-mono);
+         border-top:1px solid var(--line); padding-top:1rem;}
+  a{color:var(--copper-strong);}
+  a:focus-visible, :focus-visible{outline:2px solid var(--copper); outline-offset:2px;}
+</style>
+
+<div class="page">
+
+  <header class="titleblock">
+    <div class="eyebrow">Hand-wired split &middot; ZMK / nice!nano v2</div>
+    <h1>Wiring Reference — Two Independent Halves</h1>
+    <p class="subtitle">
+      Every pin below is named the way it is printed on your board: raw nRF52840 port labels
+      (<code>P0.22</code>, <code>P1.15</code>) rather than Pro Micro D-numbers. The smaller grey line under each
+      assignment carries the Pro&nbsp;Micro alias, because most ZMK shields and tutorials still speak that dialect —
+      they are two names for one physical pin. Each half is its own nice!nano with its own battery, switch
+      and reset button; there is no wire between the halves, they pair over BLE.
+    </p>
+    <dl class="specs">
+      <div><dt>MCU</dt><dd>nice!nano v2 &times; 2</dd></div>
+      <div><dt>Matrix</dt><dd>5 rows &times; 6 cols, per half</dd></div>
+      <div><dt>Left half adds</dt><dd>Azoteq TPS65 trackpad (I&sup2;C)</dd></div>
+      <div><dt>Right half adds</dt><dd>EC12 encoder + nice!view (SPI)</dd></div>
+    </dl>
+  </header>
+
+  <section id="orientation">
+    <h2>Which side am I looking at?</h2>
+    <p class="lede">
+      The nice!nano prints its pin labels on the <b>underside</b>. Every pinout on this page is drawn from that
+      side — the same face you photographed — so what you read here matches what you read on the board while
+      you solder. Flip the board over and the two columns trade places.
+    </p>
+    <figure>
+      <svg viewBox="0 0 640 270" role="img" aria-label="The same nice!nano seen from the bottom and from the top, USB-C up in both. From the bottom, the silkscreen labels are readable and RAW sits on the left with P0.06 on the right. From the top, the two columns swap: RAW is on the right and P0.06 on the left. The diagrams on this page use the bottom view.">
+  <defs>
+    <marker id="mirror-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="arrowfill"/>
+    </marker>
+  </defs>
+  <g transform="translate(60,0)">
+    <rect x="40" y="52" width="90" height="180" rx="8" class="boardbody"/>
+    <rect x="66" y="34" width="38" height="18" rx="3" class="usbnotch"/>
+    <text x="85" y="48" text-anchor="middle" class="usblabel">USB-C</text>
+    <text x="85" y="20" text-anchor="middle" class="mini-title">BOTTOM VIEW</text>
+    <text x="85" y="250" text-anchor="middle" class="mini-sub">what this page draws</text>
+    <line x1="28" y1="64" x2="40" y2="64" class="mini-tick"/>
+    <line x1="130" y1="64" x2="142" y2="64" class="mini-tick"/>
+    <line x1="28" y1="78" x2="40" y2="78" class="mini-tick"/>
+    <line x1="130" y1="78" x2="142" y2="78" class="mini-tick"/>
+    <line x1="28" y1="92" x2="40" y2="92" class="mini-tick"/>
+    <line x1="130" y1="92" x2="142" y2="92" class="mini-tick"/>
+    <line x1="28" y1="106" x2="40" y2="106" class="mini-tick"/>
+    <line x1="130" y1="106" x2="142" y2="106" class="mini-tick"/>
+    <line x1="28" y1="120" x2="40" y2="120" class="mini-tick"/>
+    <line x1="130" y1="120" x2="142" y2="120" class="mini-tick"/>
+    <line x1="28" y1="134" x2="40" y2="134" class="mini-tick"/>
+    <line x1="130" y1="134" x2="142" y2="134" class="mini-tick"/>
+    <line x1="28" y1="148" x2="40" y2="148" class="mini-tick"/>
+    <line x1="130" y1="148" x2="142" y2="148" class="mini-tick"/>
+    <line x1="28" y1="162" x2="40" y2="162" class="mini-tick"/>
+    <line x1="130" y1="162" x2="142" y2="162" class="mini-tick"/>
+    <line x1="28" y1="176" x2="40" y2="176" class="mini-tick"/>
+    <line x1="130" y1="176" x2="142" y2="176" class="mini-tick"/>
+    <line x1="28" y1="190" x2="40" y2="190" class="mini-tick"/>
+    <line x1="130" y1="190" x2="142" y2="190" class="mini-tick"/>
+    <line x1="28" y1="204" x2="40" y2="204" class="mini-tick"/>
+    <line x1="130" y1="204" x2="142" y2="204" class="mini-tick"/>
+    <line x1="28" y1="218" x2="40" y2="218" class="mini-tick"/>
+    <line x1="130" y1="218" x2="142" y2="218" class="mini-tick"/>
+    <text x="24" y="72" text-anchor="end" class="mini-pin">RAW</text>
+    <text x="146" y="72" text-anchor="start" class="mini-pin">P0.06</text>
+    <text x="85" y="150" text-anchor="middle" class="mini-face" transform="rotate(-90 85 150)">labels readable</text>
+  </g>
+  <g transform="translate(390,0)">
+    <rect x="40" y="52" width="90" height="180" rx="8" class="boardbody"/>
+    <rect x="66" y="34" width="38" height="18" rx="3" class="usbnotch"/>
+    <text x="85" y="48" text-anchor="middle" class="usblabel">USB-C</text>
+    <text x="85" y="20" text-anchor="middle" class="mini-title">TOP VIEW</text>
+    <text x="85" y="250" text-anchor="middle" class="mini-sub">mirror image</text>
+    <line x1="28" y1="64" x2="40" y2="64" class="mini-tick"/>
+    <line x1="130" y1="64" x2="142" y2="64" class="mini-tick"/>
+    <line x1="28" y1="78" x2="40" y2="78" class="mini-tick"/>
+    <line x1="130" y1="78" x2="142" y2="78" class="mini-tick"/>
+    <line x1="28" y1="92" x2="40" y2="92" class="mini-tick"/>
+    <line x1="130" y1="92" x2="142" y2="92" class="mini-tick"/>
+    <line x1="28" y1="106" x2="40" y2="106" class="mini-tick"/>
+    <line x1="130" y1="106" x2="142" y2="106" class="mini-tick"/>
+    <line x1="28" y1="120" x2="40" y2="120" class="mini-tick"/>
+    <line x1="130" y1="120" x2="142" y2="120" class="mini-tick"/>
+    <line x1="28" y1="134" x2="40" y2="134" class="mini-tick"/>
+    <line x1="130" y1="134" x2="142" y2="134" class="mini-tick"/>
+    <line x1="28" y1="148" x2="40" y2="148" class="mini-tick"/>
+    <line x1="130" y1="148" x2="142" y2="148" class="mini-tick"/>
+    <line x1="28" y1="162" x2="40" y2="162" class="mini-tick"/>
+    <line x1="130" y1="162" x2="142" y2="162" class="mini-tick"/>
+    <line x1="28" y1="176" x2="40" y2="176" class="mini-tick"/>
+    <line x1="130" y1="176" x2="142" y2="176" class="mini-tick"/>
+    <line x1="28" y1="190" x2="40" y2="190" class="mini-tick"/>
+    <line x1="130" y1="190" x2="142" y2="190" class="mini-tick"/>
+    <line x1="28" y1="204" x2="40" y2="204" class="mini-tick"/>
+    <line x1="130" y1="204" x2="142" y2="204" class="mini-tick"/>
+    <line x1="28" y1="218" x2="40" y2="218" class="mini-tick"/>
+    <line x1="130" y1="218" x2="142" y2="218" class="mini-tick"/>
+    <text x="24" y="72" text-anchor="end" class="mini-pin">P0.06</text>
+    <text x="146" y="72" text-anchor="start" class="mini-pin">RAW</text>
+    <text x="85" y="150" text-anchor="middle" class="mini-face" transform="rotate(-90 85 150)">labels hidden</text>
+  </g>
+  <line x1="248" y1="142" x2="352" y2="142" class="mirror-line" marker-start="url(#mirror-arrow)" marker-end="url(#mirror-arrow)"/>
+  <text x="300" y="134" text-anchor="middle" class="mini-sub">columns swap</text>
+</svg>
+      <figcaption>
+        To line your board up with these diagrams: labels facing you, USB-C pointing away from you. RAW then
+        falls on the left and P0.06 on the right. If you work from the component side instead, mirror every
+        diagram left-to-right or you will wire a half backwards.
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="legend">
+    <h2>Signal legend</h2>
+    <ul class="legend-chips">
+      <li class="l-row"><span class="swatch"></span>Matrix row</li>
+      <li class="l-col"><span class="swatch"></span>Matrix column</li>
+      <li class="l-i2c"><span class="swatch"></span>I&sup2;C — trackpad</li>
+      <li class="l-spi"><span class="swatch"></span>SPI — display</li>
+      <li class="l-enc"><span class="swatch"></span>Encoder</li>
+      <li class="l-neutral"><span class="swatch"></span>Power / reset / ground</li>
+      <li class="l-spare"><span class="swatch"></span>Spare (unused)</li>
+    </ul>
+  </section>
+
+  <section id="left-mcu">
+    <h2>Left half — nice!nano #1</h2>
+    <div class="viewbadge">
+      <b>Bottom view</b>
+      <span>silkscreen side &middot; USB-C at top &middot; RAW column on the left</span>
+    </div>
+    <div class="diagram-wrap">
+<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 left half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 spare, P1.11 as the TPS65 ready line, P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 and P0.08 spare, two GND pins, P0.17 as TPS65 SDA, P0.20 as TPS65 SCL, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
+  <rect class="boardbody" x="380" y="40" width="140" height="520" rx="10"/>
+  <rect class="usbnotch" x="415" y="16" width="70" height="26" rx="4"/>
+  <text class="usblabel" x="450" y="34" text-anchor="middle">USB-C</text>
+  <text class="boardlabel" x="450" y="300" text-anchor="middle" transform="rotate(-90 450 300)">nice!nano v2 · LEFT</text>
+  <text class="viewnote" x="450" y="590" text-anchor="middle">bottom view — labels face you</text>
+  <g>
+    <line x1="380" y1="78" x2="300" y2="78" class="leader neutral"/>
+    <circle cx="380" cy="78" r="3.5" class="pad"/>
+    <circle cx="300" cy="78" r="4" class="dot neutral"/>
+    <text x="372" y="73" text-anchor="end" class="silk neutral">RAW</text>
+    <text x="292" y="82" text-anchor="end" class="assign neutral">unused — battery via B+/B− pads</text>
+  </g>
+  <g>
+    <line x1="380" y1="120" x2="300" y2="120" class="leader neutral"/>
+    <circle cx="380" cy="120" r="3.5" class="pad"/>
+    <circle cx="300" cy="120" r="4" class="dot neutral"/>
+    <text x="372" y="115" text-anchor="end" class="silk neutral">GND</text>
+    <text x="292" y="124" text-anchor="end" class="assign neutral">GND bus</text>
+  </g>
+  <g>
+    <line x1="380" y1="162" x2="300" y2="162" class="leader neutral"/>
+    <circle cx="380" cy="162" r="3.5" class="pad"/>
+    <circle cx="300" cy="162" r="4" class="dot neutral"/>
+    <text x="372" y="157" text-anchor="end" class="silk neutral">RST</text>
+    <text x="292" y="166" text-anchor="end" class="assign neutral">RESET button</text>
+  </g>
+  <g>
+    <line x1="380" y1="204" x2="300" y2="204" class="leader neutral"/>
+    <circle cx="380" cy="204" r="3.5" class="pad"/>
+    <circle cx="300" cy="204" r="4" class="dot neutral"/>
+    <text x="372" y="199" text-anchor="end" class="silk neutral">VCC</text>
+    <text x="292" y="208" text-anchor="end" class="assign neutral">3V bus → TPS65 VCC</text>
+  </g>
+  <g>
+    <line x1="380" y1="246" x2="300" y2="246" class="leader col"/>
+    <circle cx="380" cy="246" r="3.5" class="pad"/>
+    <circle cx="300" cy="246" r="4" class="dot col"/>
+    <text x="372" y="241" text-anchor="end" class="silk col">P0.31</text>
+    <text x="292" y="245" text-anchor="end" class="assign col">COL 5</text>
+    <text x="292" y="257" text-anchor="end" class="alias">A3 · pro_micro 21</text>
+  </g>
+  <g>
+    <line x1="380" y1="288" x2="300" y2="288" class="leader col"/>
+    <circle cx="380" cy="288" r="3.5" class="pad"/>
+    <circle cx="300" cy="288" r="4" class="dot col"/>
+    <text x="372" y="283" text-anchor="end" class="silk col">P0.29</text>
+    <text x="292" y="287" text-anchor="end" class="assign col">COL 4</text>
+    <text x="292" y="299" text-anchor="end" class="alias">A2 · pro_micro 20</text>
+  </g>
+  <g>
+    <line x1="380" y1="330" x2="300" y2="330" class="leader col"/>
+    <circle cx="380" cy="330" r="3.5" class="pad"/>
+    <circle cx="300" cy="330" r="4" class="dot col"/>
+    <text x="372" y="325" text-anchor="end" class="silk col">P0.02</text>
+    <text x="292" y="329" text-anchor="end" class="assign col">COL 3</text>
+    <text x="292" y="341" text-anchor="end" class="alias">A1 · pro_micro 19</text>
+  </g>
+  <g>
+    <line x1="380" y1="372" x2="300" y2="372" class="leader col"/>
+    <circle cx="380" cy="372" r="3.5" class="pad"/>
+    <circle cx="300" cy="372" r="4" class="dot col"/>
+    <text x="372" y="367" text-anchor="end" class="silk col">P1.15</text>
+    <text x="292" y="371" text-anchor="end" class="assign col">COL 2</text>
+    <text x="292" y="383" text-anchor="end" class="alias">A0 · pro_micro 18</text>
+  </g>
+  <g>
+    <line x1="380" y1="414" x2="300" y2="414" class="leader spare"/>
+    <circle cx="380" cy="414" r="3.5" class="pad"/>
+    <circle cx="300" cy="414" r="4" class="dot spare"/>
+    <text x="372" y="409" text-anchor="end" class="silk spare">P1.13</text>
+    <text x="292" y="413" text-anchor="end" class="assign spare">spare</text>
+    <text x="292" y="425" text-anchor="end" class="alias">SCK · pro_micro 15</text>
+  </g>
+  <g>
+    <line x1="380" y1="456" x2="300" y2="456" class="leader i2c"/>
+    <circle cx="380" cy="456" r="3.5" class="pad"/>
+    <circle cx="300" cy="456" r="4" class="dot i2c"/>
+    <text x="372" y="451" text-anchor="end" class="silk i2c">P1.11</text>
+    <text x="292" y="455" text-anchor="end" class="assign i2c">TPS65 RDY</text>
+    <text x="292" y="467" text-anchor="end" class="alias">MISO · pro_micro 14</text>
+  </g>
+  <g>
+    <line x1="380" y1="498" x2="300" y2="498" class="leader spare"/>
+    <circle cx="380" cy="498" r="3.5" class="pad"/>
+    <circle cx="300" cy="498" r="4" class="dot spare"/>
+    <text x="372" y="493" text-anchor="end" class="silk spare">P0.10</text>
+    <text x="292" y="497" text-anchor="end" class="assign spare">spare</text>
+    <text x="292" y="509" text-anchor="end" class="alias">MOSI · pro_micro 16</text>
+  </g>
+  <g>
+    <line x1="380" y1="540" x2="300" y2="540" class="leader col"/>
+    <circle cx="380" cy="540" r="3.5" class="pad"/>
+    <circle cx="300" cy="540" r="4" class="dot col"/>
+    <text x="372" y="535" text-anchor="end" class="silk col">P0.09</text>
+    <text x="292" y="539" text-anchor="end" class="assign col">COL 1</text>
+    <text x="292" y="551" text-anchor="end" class="alias">pro_micro 10</text>
+  </g>
+  <g>
+    <line x1="520" y1="78" x2="600" y2="78" class="leader spare"/>
+    <circle cx="520" cy="78" r="3.5" class="pad"/>
+    <circle cx="600" cy="78" r="4" class="dot spare"/>
+    <text x="528" y="73" text-anchor="start" class="silk spare">P0.06</text>
+    <text x="608" y="77" text-anchor="start" class="assign spare">spare</text>
+    <text x="608" y="89" text-anchor="start" class="alias">TXO · pro_micro 1</text>
+  </g>
+  <g>
+    <line x1="520" y1="120" x2="600" y2="120" class="leader spare"/>
+    <circle cx="520" cy="120" r="3.5" class="pad"/>
+    <circle cx="600" cy="120" r="4" class="dot spare"/>
+    <text x="528" y="115" text-anchor="start" class="silk spare">P0.08</text>
+    <text x="608" y="119" text-anchor="start" class="assign spare">spare</text>
+    <text x="608" y="131" text-anchor="start" class="alias">RXI · pro_micro 0</text>
+  </g>
+  <g>
+    <line x1="520" y1="162" x2="600" y2="162" class="leader neutral"/>
+    <circle cx="520" cy="162" r="3.5" class="pad"/>
+    <circle cx="600" cy="162" r="4" class="dot neutral"/>
+    <text x="528" y="157" text-anchor="start" class="silk neutral">GND</text>
+    <text x="608" y="166" text-anchor="start" class="assign neutral">GND bus</text>
+  </g>
+  <g>
+    <line x1="520" y1="204" x2="600" y2="204" class="leader neutral"/>
+    <circle cx="520" cy="204" r="3.5" class="pad"/>
+    <circle cx="600" cy="204" r="4" class="dot neutral"/>
+    <text x="528" y="199" text-anchor="start" class="silk neutral">GND</text>
+    <text x="608" y="208" text-anchor="start" class="assign neutral">GND bus</text>
+  </g>
+  <g>
+    <line x1="520" y1="246" x2="600" y2="246" class="leader i2c"/>
+    <circle cx="520" cy="246" r="3.5" class="pad"/>
+    <circle cx="600" cy="246" r="4" class="dot i2c"/>
+    <text x="528" y="241" text-anchor="start" class="silk i2c">P0.17</text>
+    <text x="608" y="245" text-anchor="start" class="assign i2c">TPS65 SDA</text>
+    <text x="608" y="257" text-anchor="start" class="alias">pro_micro 2</text>
+  </g>
+  <g>
+    <line x1="520" y1="288" x2="600" y2="288" class="leader i2c"/>
+    <circle cx="520" cy="288" r="3.5" class="pad"/>
+    <circle cx="600" cy="288" r="4" class="dot i2c"/>
+    <text x="528" y="283" text-anchor="start" class="silk i2c">P0.20</text>
+    <text x="608" y="287" text-anchor="start" class="assign i2c">TPS65 SCL</text>
+    <text x="608" y="299" text-anchor="start" class="alias">pro_micro 3</text>
+  </g>
+  <g>
+    <line x1="520" y1="330" x2="600" y2="330" class="leader row"/>
+    <circle cx="520" cy="330" r="3.5" class="pad"/>
+    <circle cx="600" cy="330" r="4" class="dot row"/>
+    <text x="528" y="325" text-anchor="start" class="silk row">P0.22</text>
+    <text x="608" y="329" text-anchor="start" class="assign row">ROW 0</text>
+    <text x="608" y="341" text-anchor="start" class="alias">pro_micro 4</text>
+  </g>
+  <g>
+    <line x1="520" y1="372" x2="600" y2="372" class="leader row"/>
+    <circle cx="520" cy="372" r="3.5" class="pad"/>
+    <circle cx="600" cy="372" r="4" class="dot row"/>
+    <text x="528" y="367" text-anchor="start" class="silk row">P0.24</text>
+    <text x="608" y="371" text-anchor="start" class="assign row">ROW 1</text>
+    <text x="608" y="383" text-anchor="start" class="alias">pro_micro 5</text>
+  </g>
+  <g>
+    <line x1="520" y1="414" x2="600" y2="414" class="leader row"/>
+    <circle cx="520" cy="414" r="3.5" class="pad"/>
+    <circle cx="600" cy="414" r="4" class="dot row"/>
+    <text x="528" y="409" text-anchor="start" class="silk row">P1.00</text>
+    <text x="608" y="413" text-anchor="start" class="assign row">ROW 2</text>
+    <text x="608" y="425" text-anchor="start" class="alias">pro_micro 6</text>
+  </g>
+  <g>
+    <line x1="520" y1="456" x2="600" y2="456" class="leader row"/>
+    <circle cx="520" cy="456" r="3.5" class="pad"/>
+    <circle cx="600" cy="456" r="4" class="dot row"/>
+    <text x="528" y="451" text-anchor="start" class="silk row">P0.11</text>
+    <text x="608" y="455" text-anchor="start" class="assign row">ROW 3</text>
+    <text x="608" y="467" text-anchor="start" class="alias">pro_micro 7</text>
+  </g>
+  <g>
+    <line x1="520" y1="498" x2="600" y2="498" class="leader row"/>
+    <circle cx="520" cy="498" r="3.5" class="pad"/>
+    <circle cx="600" cy="498" r="4" class="dot row"/>
+    <text x="528" y="493" text-anchor="start" class="silk row">P1.04</text>
+    <text x="608" y="497" text-anchor="start" class="assign row">ROW 4</text>
+    <text x="608" y="509" text-anchor="start" class="alias">pro_micro 8</text>
+  </g>
+  <g>
+    <line x1="520" y1="540" x2="600" y2="540" class="leader col"/>
+    <circle cx="520" cy="540" r="3.5" class="pad"/>
+    <circle cx="600" cy="540" r="4" class="dot col"/>
+    <text x="528" y="535" text-anchor="start" class="silk col">P1.06</text>
+    <text x="608" y="539" text-anchor="start" class="assign col">COL 0</text>
+    <text x="608" y="551" text-anchor="start" class="alias">pro_micro 9</text>
+  </g>
+</svg>
+    </div>
+    <div class="tables">
+      <table>
+        <caption>5&times;6 key matrix — identical on both halves</caption>
+        <thead><tr><th>Net</th><th>Silkscreen</th><th>ZMK devicetree</th></tr></thead>
+        <tbody>
+          <tr><td>ROW 0</td><td class="pin">P0.22</td><td class="dt">&amp;gpio0 22</td></tr>
+          <tr><td>ROW 1</td><td class="pin">P0.24</td><td class="dt">&amp;gpio0 24</td></tr>
+          <tr><td>ROW 2</td><td class="pin">P1.00</td><td class="dt">&amp;gpio1 0</td></tr>
+          <tr><td>ROW 3</td><td class="pin">P0.11</td><td class="dt">&amp;gpio0 11</td></tr>
+          <tr><td>ROW 4</td><td class="pin">P1.04</td><td class="dt">&amp;gpio1 4</td></tr>
+          <tr><td>COL 0</td><td class="pin">P1.06</td><td class="dt">&amp;gpio1 6</td></tr>
+          <tr><td>COL 1</td><td class="pin">P0.09</td><td class="dt">&amp;gpio0 9</td></tr>
+          <tr><td>COL 2</td><td class="pin">P1.15</td><td class="dt">&amp;gpio1 15</td></tr>
+          <tr><td>COL 3</td><td class="pin">P0.02</td><td class="dt">&amp;gpio0 2</td></tr>
+          <tr><td>COL 4</td><td class="pin">P0.29</td><td class="dt">&amp;gpio0 29</td></tr>
+          <tr><td>COL 5</td><td class="pin">P0.31</td><td class="dt">&amp;gpio0 31</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <caption>Azoteq TPS65 trackpad (I&sup2;C) — left half</caption>
+        <thead><tr><th>TPS65 pad</th><th>Silkscreen</th></tr></thead>
+        <tbody>
+          <tr><td>VCC</td><td class="pin">VCC</td></tr>
+          <tr><td>GND</td><td class="pin">GND</td></tr>
+          <tr><td>SDA</td><td class="pin">P0.17</td></tr>
+          <tr><td>SCL</td><td class="pin">P0.20</td></tr>
+          <tr><td>RDY (if broken out)</td><td class="pin">P1.11</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <caption>Power &amp; reset — both halves</caption>
+        <thead><tr><th>Function</th><th>Pad</th></tr></thead>
+        <tbody>
+          <tr><td>Battery +/&minus;</td><td class="pin">B+ / B&minus; pads</td></tr>
+          <tr><td>On/off switch</td><td class="pin">inline on battery + lead</td></tr>
+          <tr><td>Reset button</td><td class="pin">RST &rarr; GND</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="right-mcu">
+    <h2>Right half — nice!nano #2</h2>
+    <div class="viewbadge">
+      <b>Bottom view</b>
+      <span>silkscreen side &middot; USB-C at top &middot; RAW column on the left</span>
+    </div>
+    <p class="lede">
+      <b>The nice!view has no D/C pin.</b> It is a Sharp memory-in-pixel LCD
+      (<code>sharp,ls0xx</code>), which takes chip-select, clock and data only — an earlier version of this
+      page showed a D/C line on P0.06 that does not exist on the part. Display signals now sit on
+      <code>P0.10</code>, <code>P1.01</code> and <code>P1.11</code>, matching the firmware's <code>spi3</code>.
+      Two of them land on underside pads rather than header pins, because the header has exactly one
+      free pin left.
+    </p>
+    <div class="diagram-wrap">
+<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 right half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 spare, P1.11 as nice!view chip select, P0.10 as nice!view SCK, and P0.09 as matrix column 1. Right column top to bottom: P0.06 and P0.08 spare, two GND pins, P0.17 and P0.20 as EC12 encoder A and B, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
+  <rect class="boardbody" x="380" y="40" width="140" height="520" rx="10"/>
+  <rect class="usbnotch" x="415" y="16" width="70" height="26" rx="4"/>
+  <text class="usblabel" x="450" y="34" text-anchor="middle">USB-C</text>
+  <text class="boardlabel" x="450" y="300" text-anchor="middle" transform="rotate(-90 450 300)">nice!nano v2 · RIGHT</text>
+  <text class="viewnote" x="450" y="590" text-anchor="middle">bottom view — labels face you</text>
+  <g>
+    <line x1="380" y1="78" x2="300" y2="78" class="leader neutral"/>
+    <circle cx="380" cy="78" r="3.5" class="pad"/>
+    <circle cx="300" cy="78" r="4" class="dot neutral"/>
+    <text x="372" y="73" text-anchor="end" class="silk neutral">RAW</text>
+    <text x="292" y="82" text-anchor="end" class="assign neutral">unused — battery via B+/B− pads</text>
+  </g>
+  <g>
+    <line x1="380" y1="120" x2="300" y2="120" class="leader neutral"/>
+    <circle cx="380" cy="120" r="3.5" class="pad"/>
+    <circle cx="300" cy="120" r="4" class="dot neutral"/>
+    <text x="372" y="115" text-anchor="end" class="silk neutral">GND</text>
+    <text x="292" y="124" text-anchor="end" class="assign neutral">GND bus</text>
+  </g>
+  <g>
+    <line x1="380" y1="162" x2="300" y2="162" class="leader neutral"/>
+    <circle cx="380" cy="162" r="3.5" class="pad"/>
+    <circle cx="300" cy="162" r="4" class="dot neutral"/>
+    <text x="372" y="157" text-anchor="end" class="silk neutral">RST</text>
+    <text x="292" y="166" text-anchor="end" class="assign neutral">RESET button</text>
+  </g>
+  <g>
+    <line x1="380" y1="204" x2="300" y2="204" class="leader neutral"/>
+    <circle cx="380" cy="204" r="3.5" class="pad"/>
+    <circle cx="300" cy="204" r="4" class="dot neutral"/>
+    <text x="372" y="199" text-anchor="end" class="silk neutral">VCC</text>
+    <text x="292" y="208" text-anchor="end" class="assign neutral">3V bus → nice!view VCC</text>
+  </g>
+  <g>
+    <line x1="380" y1="246" x2="300" y2="246" class="leader col"/>
+    <circle cx="380" cy="246" r="3.5" class="pad"/>
+    <circle cx="300" cy="246" r="4" class="dot col"/>
+    <text x="372" y="241" text-anchor="end" class="silk col">P0.31</text>
+    <text x="292" y="245" text-anchor="end" class="assign col">COL 5</text>
+    <text x="292" y="257" text-anchor="end" class="alias">A3 · pro_micro 21</text>
+  </g>
+  <g>
+    <line x1="380" y1="288" x2="300" y2="288" class="leader col"/>
+    <circle cx="380" cy="288" r="3.5" class="pad"/>
+    <circle cx="300" cy="288" r="4" class="dot col"/>
+    <text x="372" y="283" text-anchor="end" class="silk col">P0.29</text>
+    <text x="292" y="287" text-anchor="end" class="assign col">COL 4</text>
+    <text x="292" y="299" text-anchor="end" class="alias">A2 · pro_micro 20</text>
+  </g>
+  <g>
+    <line x1="380" y1="330" x2="300" y2="330" class="leader col"/>
+    <circle cx="380" cy="330" r="3.5" class="pad"/>
+    <circle cx="300" cy="330" r="4" class="dot col"/>
+    <text x="372" y="325" text-anchor="end" class="silk col">P0.02</text>
+    <text x="292" y="329" text-anchor="end" class="assign col">COL 3</text>
+    <text x="292" y="341" text-anchor="end" class="alias">A1 · pro_micro 19</text>
+  </g>
+  <g>
+    <line x1="380" y1="372" x2="300" y2="372" class="leader col"/>
+    <circle cx="380" cy="372" r="3.5" class="pad"/>
+    <circle cx="300" cy="372" r="4" class="dot col"/>
+    <text x="372" y="367" text-anchor="end" class="silk col">P1.15</text>
+    <text x="292" y="371" text-anchor="end" class="assign col">COL 2</text>
+    <text x="292" y="383" text-anchor="end" class="alias">A0 · pro_micro 18</text>
+  </g>
+  <g>
+    <line x1="380" y1="414" x2="300" y2="414" class="leader spare"/>
+    <circle cx="380" cy="414" r="3.5" class="pad"/>
+    <circle cx="300" cy="414" r="4" class="dot spare"/>
+    <text x="372" y="409" text-anchor="end" class="silk spare">P1.13</text>
+    <text x="292" y="413" text-anchor="end" class="assign spare">spare</text>
+    <text x="292" y="425" text-anchor="end" class="alias">SCK · pro_micro 15</text>
+  </g>
+  <g>
+    <line x1="380" y1="456" x2="300" y2="456" class="leader spi"/>
+    <circle cx="380" cy="456" r="3.5" class="pad"/>
+    <circle cx="300" cy="456" r="4" class="dot spi"/>
+    <text x="372" y="451" text-anchor="end" class="silk spi">P1.11</text>
+    <text x="292" y="455" text-anchor="end" class="assign spi">nice!view CS</text>
+    <text x="292" y="467" text-anchor="end" class="alias">MISO · pro_micro 14</text>
+  </g>
+  <g>
+    <line x1="380" y1="498" x2="300" y2="498" class="leader spi"/>
+    <circle cx="380" cy="498" r="3.5" class="pad"/>
+    <circle cx="300" cy="498" r="4" class="dot spi"/>
+    <text x="372" y="493" text-anchor="end" class="silk spi">P0.10</text>
+    <text x="292" y="497" text-anchor="end" class="assign spi">nice!view SCK</text>
+    <text x="292" y="509" text-anchor="end" class="alias">MOSI · pro_micro 16</text>
+  </g>
+  <g>
+    <line x1="380" y1="540" x2="300" y2="540" class="leader col"/>
+    <circle cx="380" cy="540" r="3.5" class="pad"/>
+    <circle cx="300" cy="540" r="4" class="dot col"/>
+    <text x="372" y="535" text-anchor="end" class="silk col">P0.09</text>
+    <text x="292" y="539" text-anchor="end" class="assign col">COL 1</text>
+    <text x="292" y="551" text-anchor="end" class="alias">pro_micro 10</text>
+  </g>
+  <g>
+    <line x1="520" y1="78" x2="600" y2="78" class="leader spare"/>
+    <circle cx="520" cy="78" r="3.5" class="pad"/>
+    <circle cx="600" cy="78" r="4" class="dot spare"/>
+    <text x="528" y="73" text-anchor="start" class="silk spare">P0.06</text>
+    <text x="608" y="77" text-anchor="start" class="assign spare">spare</text>
+    <text x="608" y="89" text-anchor="start" class="alias">TXO · pro_micro 1</text>
+  </g>
+  <g>
+    <line x1="520" y1="120" x2="600" y2="120" class="leader spare"/>
+    <circle cx="520" cy="120" r="3.5" class="pad"/>
+    <circle cx="600" cy="120" r="4" class="dot spare"/>
+    <text x="528" y="115" text-anchor="start" class="silk spare">P0.08</text>
+    <text x="608" y="119" text-anchor="start" class="assign spare">spare</text>
+    <text x="608" y="131" text-anchor="start" class="alias">RXI · pro_micro 0</text>
+  </g>
+  <g>
+    <line x1="520" y1="162" x2="600" y2="162" class="leader neutral"/>
+    <circle cx="520" cy="162" r="3.5" class="pad"/>
+    <circle cx="600" cy="162" r="4" class="dot neutral"/>
+    <text x="528" y="157" text-anchor="start" class="silk neutral">GND</text>
+    <text x="608" y="166" text-anchor="start" class="assign neutral">GND bus</text>
+  </g>
+  <g>
+    <line x1="520" y1="204" x2="600" y2="204" class="leader neutral"/>
+    <circle cx="520" cy="204" r="3.5" class="pad"/>
+    <circle cx="600" cy="204" r="4" class="dot neutral"/>
+    <text x="528" y="199" text-anchor="start" class="silk neutral">GND</text>
+    <text x="608" y="208" text-anchor="start" class="assign neutral">GND bus</text>
+  </g>
+  <g>
+    <line x1="520" y1="246" x2="600" y2="246" class="leader enc"/>
+    <circle cx="520" cy="246" r="3.5" class="pad"/>
+    <circle cx="600" cy="246" r="4" class="dot enc"/>
+    <text x="528" y="241" text-anchor="start" class="silk enc">P0.17</text>
+    <text x="608" y="245" text-anchor="start" class="assign enc">EC12 A</text>
+    <text x="608" y="257" text-anchor="start" class="alias">pro_micro 2</text>
+  </g>
+  <g>
+    <line x1="520" y1="288" x2="600" y2="288" class="leader enc"/>
+    <circle cx="520" cy="288" r="3.5" class="pad"/>
+    <circle cx="600" cy="288" r="4" class="dot enc"/>
+    <text x="528" y="283" text-anchor="start" class="silk enc">P0.20</text>
+    <text x="608" y="287" text-anchor="start" class="assign enc">EC12 B</text>
+    <text x="608" y="299" text-anchor="start" class="alias">pro_micro 3</text>
+  </g>
+  <g>
+    <line x1="520" y1="330" x2="600" y2="330" class="leader row"/>
+    <circle cx="520" cy="330" r="3.5" class="pad"/>
+    <circle cx="600" cy="330" r="4" class="dot row"/>
+    <text x="528" y="325" text-anchor="start" class="silk row">P0.22</text>
+    <text x="608" y="329" text-anchor="start" class="assign row">ROW 0</text>
+    <text x="608" y="341" text-anchor="start" class="alias">pro_micro 4</text>
+  </g>
+  <g>
+    <line x1="520" y1="372" x2="600" y2="372" class="leader row"/>
+    <circle cx="520" cy="372" r="3.5" class="pad"/>
+    <circle cx="600" cy="372" r="4" class="dot row"/>
+    <text x="528" y="367" text-anchor="start" class="silk row">P0.24</text>
+    <text x="608" y="371" text-anchor="start" class="assign row">ROW 1</text>
+    <text x="608" y="383" text-anchor="start" class="alias">pro_micro 5</text>
+  </g>
+  <g>
+    <line x1="520" y1="414" x2="600" y2="414" class="leader row"/>
+    <circle cx="520" cy="414" r="3.5" class="pad"/>
+    <circle cx="600" cy="414" r="4" class="dot row"/>
+    <text x="528" y="409" text-anchor="start" class="silk row">P1.00</text>
+    <text x="608" y="413" text-anchor="start" class="assign row">ROW 2</text>
+    <text x="608" y="425" text-anchor="start" class="alias">pro_micro 6</text>
+  </g>
+  <g>
+    <line x1="520" y1="456" x2="600" y2="456" class="leader row"/>
+    <circle cx="520" cy="456" r="3.5" class="pad"/>
+    <circle cx="600" cy="456" r="4" class="dot row"/>
+    <text x="528" y="451" text-anchor="start" class="silk row">P0.11</text>
+    <text x="608" y="455" text-anchor="start" class="assign row">ROW 3</text>
+    <text x="608" y="467" text-anchor="start" class="alias">pro_micro 7</text>
+  </g>
+  <g>
+    <line x1="520" y1="498" x2="600" y2="498" class="leader row"/>
+    <circle cx="520" cy="498" r="3.5" class="pad"/>
+    <circle cx="600" cy="498" r="4" class="dot row"/>
+    <text x="528" y="493" text-anchor="start" class="silk row">P1.04</text>
+    <text x="608" y="497" text-anchor="start" class="assign row">ROW 4</text>
+    <text x="608" y="509" text-anchor="start" class="alias">pro_micro 8</text>
+  </g>
+  <g>
+    <line x1="520" y1="540" x2="600" y2="540" class="leader col"/>
+    <circle cx="520" cy="540" r="3.5" class="pad"/>
+    <circle cx="600" cy="540" r="4" class="dot col"/>
+    <text x="528" y="535" text-anchor="start" class="silk col">P1.06</text>
+    <text x="608" y="539" text-anchor="start" class="assign col">COL 0</text>
+    <text x="608" y="551" text-anchor="start" class="alias">pro_micro 9</text>
+  </g>
+</svg>
+    </div>
+    <div class="tables">
+      <table>
+        <caption>5&times;6 key matrix — identical on both halves</caption>
+        <thead><tr><th>Net</th><th>Silkscreen</th><th>ZMK devicetree</th></tr></thead>
+        <tbody>
+          <tr><td>ROW 0</td><td class="pin">P0.22</td><td class="dt">&amp;gpio0 22</td></tr>
+          <tr><td>ROW 1</td><td class="pin">P0.24</td><td class="dt">&amp;gpio0 24</td></tr>
+          <tr><td>ROW 2</td><td class="pin">P1.00</td><td class="dt">&amp;gpio1 0</td></tr>
+          <tr><td>ROW 3</td><td class="pin">P0.11</td><td class="dt">&amp;gpio0 11</td></tr>
+          <tr><td>ROW 4</td><td class="pin">P1.04</td><td class="dt">&amp;gpio1 4</td></tr>
+          <tr><td>COL 0</td><td class="pin">P1.06</td><td class="dt">&amp;gpio1 6</td></tr>
+          <tr><td>COL 1</td><td class="pin">P0.09</td><td class="dt">&amp;gpio0 9</td></tr>
+          <tr><td>COL 2</td><td class="pin">P1.15</td><td class="dt">&amp;gpio1 15</td></tr>
+          <tr><td>COL 3</td><td class="pin">P0.02</td><td class="dt">&amp;gpio0 2</td></tr>
+          <tr><td>COL 4</td><td class="pin">P0.29</td><td class="dt">&amp;gpio0 29</td></tr>
+          <tr><td>COL 5</td><td class="pin">P0.31</td><td class="dt">&amp;gpio0 31</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <caption>EC12 rotary encoder — right half</caption>
+        <thead><tr><th>EC12 leg</th><th>Silkscreen</th></tr></thead>
+        <tbody>
+          <tr><td>A</td><td class="pin">P0.17</td></tr>
+          <tr><td>B</td><td class="pin">P0.20</td></tr>
+          <tr><td>C (common)</td><td class="pin">GND</td></tr>
+          <tr><td>SW leg 1</td><td class="pin">P1.02 &mdash; underside pad</td></tr>
+          <tr><td>SW leg 2</td><td class="pin">GND</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <caption>nice!view display (SPI) — right half</caption>
+        <thead><tr><th>nice!view pad</th><th>Silkscreen</th></tr></thead>
+        <tbody>
+          <tr><td>VCC</td><td class="pin">VCC</td></tr>
+          <tr><td>GND</td><td class="pin">GND</td></tr>
+          <tr><td>SCK</td><td class="pin">P0.10</td></tr>
+          <tr><td>MOSI</td><td class="pin">P1.01 &mdash; underside pad</td></tr>
+          <tr><td>CS</td><td class="pin">P1.11</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <caption>Underside pads</caption>
+        <thead><tr><th>Pad</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td>P1.01</td><td class="pin">nice!view MOSI</td></tr>
+          <tr><td>P1.02</td><td class="pin">EC12 SW</td></tr>
+          <tr><td>P1.07</td><td class="pin">spare GPIO</td></tr>
+          <tr><td>SWD / SWC</td><td class="pin">SWD programming — leave alone</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="mechanism">
+    <h2>Two things a pin table can't show</h2>
+    <div class="mech-grid">
+      <figure>
+        <svg viewBox="0 0 400 260" role="img" aria-label="Matrix wiring convention: each key's switch and diode sit in series between a column wire and a row wire, diode cathode facing the row, so current only flows column to row when that specific key is pressed.">
+          <text x="118" y="18" text-anchor="middle" class="schem-label">COL 0 — P1.06</text>
+          <text x="290" y="18" text-anchor="middle" class="schem-label">COL 1 — P0.09</text>
+          <line x1="118" y1="24" x2="118" y2="236" class="schem-line"/>
+          <line x1="278" y1="24" x2="278" y2="236" class="schem-line"/>
+          <text x="55" y="74" text-anchor="end" class="schem-label">ROW 0</text>
+          <text x="55" y="88" text-anchor="end" class="schem-label">P0.22</text>
+          <text x="55" y="194" text-anchor="end" class="schem-label">ROW 1</text>
+          <text x="55" y="208" text-anchor="end" class="schem-label">P0.24</text>
+          <line x1="60" y1="70" x2="340" y2="70" class="schem-line"/>
+          <line x1="60" y1="190" x2="340" y2="190" class="schem-line"/>
+          <g>
+            <line x1="118" y1="32" x2="140" y2="32" class="schem-line"/>
+            <rect x="132" y="32" width="16" height="14" fill="none" class="schem-line"/>
+            <line x1="132" y1="46" x2="148" y2="32" class="schem-line"/>
+            <line x1="140" y1="46" x2="140" y2="52" class="schem-line"/>
+            <polygon points="132,52 148,52 140,64" class="schem-fill"/>
+            <line x1="132" y1="64" x2="148" y2="64" class="schem-accent" stroke-width="2.4"/>
+            <line x1="140" y1="64" x2="140" y2="70" class="schem-line"/>
+          </g>
+          <g>
+            <line x1="278" y1="32" x2="300" y2="32" class="schem-line"/>
+            <rect x="292" y="32" width="16" height="14" fill="none" class="schem-line"/>
+            <line x1="292" y1="46" x2="308" y2="32" class="schem-line"/>
+            <line x1="300" y1="46" x2="300" y2="52" class="schem-line"/>
+            <polygon points="292,52 308,52 300,64" class="schem-fill"/>
+            <line x1="292" y1="64" x2="308" y2="64" class="schem-accent" stroke-width="2.4"/>
+            <line x1="300" y1="64" x2="300" y2="70" class="schem-line"/>
+          </g>
+          <g>
+            <line x1="118" y1="152" x2="140" y2="152" class="schem-line"/>
+            <rect x="132" y="152" width="16" height="14" fill="none" class="schem-line"/>
+            <line x1="132" y1="166" x2="148" y2="152" class="schem-line"/>
+            <line x1="140" y1="166" x2="140" y2="172" class="schem-line"/>
+            <polygon points="132,172 148,172 140,184" class="schem-fill"/>
+            <line x1="132" y1="184" x2="148" y2="184" class="schem-accent" stroke-width="2.4"/>
+            <line x1="140" y1="184" x2="140" y2="190" class="schem-line"/>
+          </g>
+          <g>
+            <line x1="278" y1="152" x2="300" y2="152" class="schem-line"/>
+            <rect x="292" y="152" width="16" height="14" fill="none" class="schem-line"/>
+            <line x1="292" y1="166" x2="308" y2="152" class="schem-line"/>
+            <line x1="300" y1="166" x2="300" y2="172" class="schem-line"/>
+            <polygon points="292,172 308,172 300,184" class="schem-fill"/>
+            <line x1="292" y1="184" x2="308" y2="184" class="schem-accent" stroke-width="2.4"/>
+            <line x1="300" y1="184" x2="300" y2="190" class="schem-line"/>
+          </g>
+          <text x="152" y="42" class="schem-label">SW</text>
+          <text x="152" y="62" class="schem-label" fill="var(--copper-strong)">cathode &rarr;</text>
+          <text x="200" y="252" text-anchor="middle" class="schem-label">pattern repeats for all 30 keys per half</text>
+        </svg>
+        <figcaption>
+          Every key is a switch and diode in series, bridging one column wire to one row wire — the column and
+          row lines themselves never touch. This assumes <b>COL2ROW</b> (cathode band facing the row wire); wire
+          all 30 keys per half the same direction and set <code>diode-direction</code> to match in the ZMK
+          matrix transform.
+        </figcaption>
+      </figure>
+
+      <figure>
+        <svg viewBox="0 0 460 230" role="img" aria-label="Battery, switch and reset wiring: the battery's positive lead runs through an inline on/off switch before reaching the board's B plus pad, the negative lead runs straight to B minus; separately the RST pad connects through a momentary push button to a GND pad.">
+          <text x="30" y="40" class="schem-label">3.7V LiPo</text>
+          <line x1="20" y1="50" x2="55" y2="50" class="schem-line"/>
+          <line x1="55" y1="34" x2="55" y2="66" class="schem-line" stroke-width="3"/>
+          <line x1="65" y1="40" x2="65" y2="60" class="schem-line" stroke-width="1.4"/>
+          <text x="42" y="30" class="schem-label">+</text>
+          <text x="66" y="82" class="schem-label">&minus;</text>
+          <line x1="65" y1="50" x2="150" y2="50" class="schem-line"/>
+          <line x1="55" y1="90" x2="340" y2="90" class="schem-line"/>
+          <circle cx="150" cy="50" r="3" class="schem-fill"/>
+          <line x1="150" y1="50" x2="188" y2="38" class="schem-line"/>
+          <circle cx="190" cy="50" r="3" class="schem-fill"/>
+          <line x1="190" y1="50" x2="230" y2="50" class="schem-line"/>
+          <text x="170" y="30" text-anchor="middle" class="schem-label">ON/OFF</text>
+          <line x1="230" y1="50" x2="340" y2="50" class="schem-line"/>
+          <rect x="340" y="20" width="14" height="180" class="boardbody"/>
+          <text x="397" y="112" text-anchor="middle" class="schem-label" transform="rotate(90 397 112)">nice!nano board edge</text>
+          <line x1="340" y1="50" x2="356" y2="50" class="schem-line"/>
+          <text x="360" y="54" class="schem-label">B+</text>
+          <line x1="340" y1="90" x2="356" y2="90" class="schem-line"/>
+          <text x="360" y="94" class="schem-label">B&minus;</text>
+          <line x1="300" y1="140" x2="340" y2="140" class="schem-line"/>
+          <text x="360" y="144" class="schem-label">RST</text>
+          <line x1="300" y1="180" x2="340" y2="180" class="schem-line"/>
+          <text x="360" y="184" class="schem-label">GND</text>
+          <line x1="260" y1="140" x2="300" y2="140" class="schem-line"/>
+          <rect x="250" y="130" width="20" height="20" fill="none" class="schem-accent"/>
+          <line x1="255" y1="130" x2="265" y2="122" class="schem-accent"/>
+          <text x="260" y="115" text-anchor="middle" class="schem-label">reset</text>
+          <line x1="250" y1="140" x2="230" y2="140" class="schem-line"/>
+          <line x1="230" y1="140" x2="230" y2="180" class="schem-line"/>
+          <line x1="230" y1="180" x2="300" y2="180" class="schem-line"/>
+        </svg>
+        <figcaption>
+          The nice!nano charges the battery through its <code>B+</code>/<code>B&minus;</code> pads whenever USB-C
+          is connected, so the switch only needs to sit inline on the battery's positive lead — splice it in with
+          heat-shrink, it doesn't touch any header pin. Reset is separate: a momentary push button bridges RST
+          to GND.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="notes-section">
+    <h2>Before you pick up the iron</h2>
+    <div class="notes">
+      <ul>
+        <li><b>P0.09 and P0.10 are the NFC pins.</b> On the nRF52840 those two default to NFC antenna duty and
+          only behave as ordinary GPIO once the firmware sets <code>CONFIG_NFCT_PINS_AS_GPIO=y</code>. ZMK's
+          <code>nice_nano_v2</code> board definition enables it, so a stock ZMK build is fine — but if you ever
+          move to a custom board definition, confirm it is still set or COL&nbsp;1 and the display MOSI line go dead.</li>
+        <li><b>Peripheral pins are a choice, not a constraint.</b> The nRF52840 muxes any GPIO to any serial
+          peripheral through pinctrl, so I&sup2;C on P0.17/P0.20 and SPI on P1.13/P0.10 are conventions picked to keep
+          the matrix contiguous — not fixed-function pins. Move them if your layout wants it, and update pinctrl to match.</li>
+        <li><b>Both dialects appear in ZMK configs.</b> <code>&amp;gpio0 22</code> and <code>&amp;pro_micro 4</code>
+          address the same physical pin. Pick one and stay with it across your matrix transform, encoder and
+          display nodes — mixing them in one file is where wiring bugs hide.</li>
+        <li><b>Two display signals are on the underside.</b> nice!view MOSI goes to the <code>P1.01</code>
+          pad and the EC12 switch to <code>P1.02</code>, because the 18-pin header is fully committed once the
+          matrix, trackball and encoder are wired. Those pads are smaller than the header holes — tin them
+          first and use thin wire.</li>
+        <li><b>TPS65 RDY is optional.</b> Some Azoteq TPS65 breakouts don't expose a data-ready line — if yours
+          doesn't, leave P1.11 unused on the left half and poll the trackpad over I&sup2;C instead.</li>
+        <li><b>EC12 leg order varies by part.</b> Confirm which of the five legs is the shared common (C) with a
+          continuity beep before soldering — on most EC12s it's the centre pin of each 3-pin group, but check yours.</li>
+        <li><b>Battery polarity is not user-serviceable.</b> Double-check +/&minus; against the
+          <code>B+</code>/<code>B&minus;</code> silkscreen before connecting — reversed polarity can damage the
+          charge circuit.</li>
+        <li><b>Diode direction must be consistent across all 60 keys</b> (30 per half) and must match the
+          <code>diode-direction</code> setting in your ZMK matrix transform, or every key will appear to do nothing.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    nice!nano v2 &middot; pins named as silkscreened (nRF52840 P0.xx / P1.xx) &middot; all pinouts drawn bottom view, USB-C up
+    &middot; display pins match <code>spi3</code> in paw_{left,right}.overlay
+  </footer>
+
+</div>

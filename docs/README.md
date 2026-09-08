@@ -4,6 +4,14 @@ Hand-wiring pinouts for the two nice!nano v2 halves. Pins are named as they are
 silkscreened on the board — raw nRF52840 port names (`P0.22`, `P1.15`), not Pro
 Micro D-numbers.
 
+### 📌 Manufacturer's pinout
+
+**[nice!nano v2 official pinout → `pinout-v2.png`](https://nicekeyboards.com/static/1788ac663060fd510f4894b286cd97b1/3c492/pinout-v2.png)** — nicekeyboards' own
+drawing, and the authority on what each pad is. The diagrams here are redrawn to
+show *this keyboard's* signal assignments on top of that pinout; they do not
+replace it. Open both side by side before soldering, and if they ever disagree,
+the manufacturer's wins.
+
 > **Both diagrams are drawn from the BOTTOM of the board.** The nice!nano prints
 > its pin labels on the underside, so this is the face you read while soldering.
 > To line a board up: labels facing you, USB-C pointing away. RAW then falls on
@@ -105,8 +113,9 @@ external west module. See the commented stub in `slabboard_left.overlay`.
 
 ## Before you solder
 
-- **Verify the silkscreen against your own boards.** Clones and older revisions
-  have shipped with shifted or mislabelled pads. Beep out a pin or two first.
+- **Verify the silkscreen against your own boards** and against the
+  [official pinout](https://nicekeyboards.com/static/1788ac663060fd510f4894b286cd97b1/3c492/pinout-v2.png). Clones and older revisions have shipped with shifted
+  or mislabelled pads. Beep out a pin or two first.
 - **`P0.09` and `P0.10` are the nRF52840's NFC pins.** They only work as GPIO with
   `CONFIG_NFCT_PINS_AS_GPIO=y`, which ZMK's nice!nano board definition sets.
   `P0.09` is COL 1 and `P0.10` is the display clock, so both halves depend on it.

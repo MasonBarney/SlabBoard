@@ -44,6 +44,9 @@ unusable with this shield: it attaches to a `lpm_view_spi` label that
 
 ## nice!nano v2 pin naming
 
+Manufacturer's pinout (the authority on what each pad is):
+<https://nicekeyboards.com/static/1788ac663060fd510f4894b286cd97b1/3c492/pinout-v2.png>
+
 The board silkscreens **raw nRF52840 port names** (`P0.22`, `P1.15`), not Pro Micro
 D-numbers. Both dialects address the same physical pin. This repo uses `&gpioN`
 throughout — keep it that way.

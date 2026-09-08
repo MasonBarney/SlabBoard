@@ -57,6 +57,15 @@
   h2::after{content:""; flex:1; height:1px; background:var(--line);}
   .lede{margin:0; max-width:64ch; color:var(--muted); font-size:0.92rem;}
 
+  .reflink{display:flex; flex-wrap:wrap; align-items:baseline; gap:0.35rem 0.7rem;
+           margin-top:1rem; padding:0.75rem 1rem; background:var(--badge-bg);
+           border:1px solid var(--badge-line); border-left:4px solid var(--copper);
+           border-radius:4px; font-size:0.9rem;}
+  .reflink b{font-family:var(--font-mono); font-size:0.72rem; text-transform:uppercase;
+             letter-spacing:0.1em; color:var(--copper-strong); flex:none;}
+  .reflink span{color:var(--muted);}
+  .reflink a{font-weight:600; overflow-wrap:anywhere;}
+
   .viewbadge{display:flex; flex-wrap:wrap; align-items:baseline; gap:0.5rem 0.75rem;
              font-family:var(--font-mono); font-size:0.8rem;
              background:var(--badge-bg); border:1px solid var(--badge-line);
@@ -159,6 +168,14 @@
       <div><dt>Left half adds</dt><dd>Azoteq TPS65 trackpad (I&sup2;C)</dd></div>
       <div><dt>Right half adds</dt><dd>EC12 encoder + nice!view (SPI)</dd></div>
     </dl>
+    <div class="reflink">
+      <b>Cross-check</b>
+      <span>Official nice!nano v2 pinout from nicekeyboards:
+        <a href="https://nicekeyboards.com/static/1788ac663060fd510f4894b286cd97b1/3c492/pinout-v2.png"
+           target="_blank" rel="noopener noreferrer">pinout-v2.png</a>.
+        That is the manufacturer's own drawing — open it alongside this page and confirm the
+        pins before you commit solder.</span>
+    </div>
   </header>
 
   <section id="orientation">
@@ -882,12 +899,18 @@
     <h2>Before you pick up the iron</h2>
     <div class="notes">
       <ul>
+        <li><b>Check against the manufacturer's pinout.</b> nicekeyboards publishes the
+          authoritative drawing at
+          <a href="https://nicekeyboards.com/static/1788ac663060fd510f4894b286cd97b1/3c492/pinout-v2.png"
+             target="_blank" rel="noopener noreferrer">pinout-v2.png</a>. If it and this page ever
+          disagree, theirs wins — this one is redrawn to show one keyboard's signal assignments,
+          not to replace their reference.</li>
         <li><b>P0.09 and P0.10 are the NFC pins.</b> On the nRF52840 those two default to NFC antenna duty and
           only behave as ordinary GPIO once the firmware sets <code>CONFIG_NFCT_PINS_AS_GPIO=y</code>. ZMK's
           <code>nice_nano_v2</code> board definition enables it, so a stock ZMK build is fine — but if you ever
           move to a custom board definition, confirm it is still set or COL&nbsp;1 and the display MOSI line go dead.</li>
         <li><b>Peripheral pins are a choice, not a constraint.</b> The nRF52840 muxes any GPIO to any serial
-          peripheral through pinctrl, so I&sup2;C on P0.17/P0.20 and SPI on P1.13/P0.10 are conventions picked to keep
+          peripheral through pinctrl, so I&sup2;C on P0.17/P0.20 and SPI on P0.10/P1.01 are conventions picked to keep
           the matrix contiguous — not fixed-function pins. Move them if your layout wants it, and update pinctrl to match.</li>
         <li><b>Both dialects appear in ZMK configs.</b> <code>&amp;gpio0 22</code> and <code>&amp;pro_micro 4</code>
           address the same physical pin. Pick one and stay with it across your matrix transform, encoder and

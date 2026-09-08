@@ -30,7 +30,8 @@ matching `.uf2` onto it.
 ## Pinout
 
 Pins are named as they are silkscreened on the nice!nano v2 — raw nRF52840 port
-names (`P0.22`, `P1.15`), not Pro Micro D-numbers.
+names (`P0.22`, `P1.15`), not Pro Micro D-numbers. For the board itself, see
+nicekeyboards' [official nice!nano v2 pinout](https://nicekeyboards.com/static/1788ac663060fd510f4894b286cd97b1/3c492/pinout-v2.png).
 
 | Net | Pins |
 |---|---|

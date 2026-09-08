@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Local ZMK/west build output
+build/
+.west/
+zephyr/
+modules/

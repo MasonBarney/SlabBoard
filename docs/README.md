@@ -100,8 +100,9 @@ The push switch is not in the firmware yet: the 5×6 grid is full, so it needs a
 | SCL | `P0.20` |
 | RDY | `P1.11` |
 
-Not wired up in firmware — ZMK has no in-tree Azoteq driver, so this needs an
-external west module. See the commented stub in `slabboard_left.overlay`.
+Driven by [AYM1607/zmk-driver-azoteq-iqs5xx](https://github.com/AYM1607/zmk-driver-azoteq-iqs5xx), an external ZMK module pulled in by `config/west.yml`. The pad
+sits at I²C address `0x74` on `i2c0`. No reset line is wired — the driver treats
+`reset-gpios` as optional.
 
 ### Power and reset — both halves
 

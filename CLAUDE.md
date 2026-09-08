@@ -21,16 +21,17 @@ the published wiring diagram exactly.
   enabled in `slabboard_right.overlay`
 - **nice!view** (right only): SPI3 — SCK `P0.10`, MOSI `P1.01` (underside pad),
   CS `P1.11`. Sharp `ls0xx` memory LCD: chip-select/clock/data only, **no D/C line**
+- **Trackpad** (left only): Azoteq TPS65 on `i2c0` — SDA `P0.17`, SCL `P0.20`,
+  RDY `P1.11`, address `0x74`, `compatible = "azoteq,iqs5xx"`. Driver is the
+  external module `AYM1607/zmk-driver-azoteq-iqs5xx`, pinned in `config/west.yml`.
+  `P0.17`/`P0.20` are I²C on the left and encoder A/B on the right; each half
+  only enables its own.
 - **RGB underglow**: none. This board has no LEDs.
 - **Keymap**: `config/slabboard.keymap` — 4 layers (Base / Lower / Raise / Adjust),
   60 bindings each, encoder sensor-binding per layer
 
 ### Not yet wired up
 
-- **Azoteq TPS65 trackpad** (left half: SDA `P0.17`, SCL `P0.20`, RDY `P1.11`).
-  ZMK has no in-tree Azoteq driver, so this needs an external west module. There
-  is a commented-out stub in `slabboard_left.overlay` — its `compatible` and property
-  names are placeholders and **must** be replaced with the real binding, not guessed.
 - **EC12 push switch** (`P1.02` pad). The 5×6 grid is full, so the switch cannot
   live in the matrix; it needs a `zmk,kscan-gpio-direct` plus `kscan-composite`
   and a 61st keymap position.
@@ -89,6 +90,12 @@ is COL 1 and `P0.10` is the display clock, so both halves depend on it.
   right half is instead wired identically to the left, un-reverse it — the comment in
   that file says where.
 - The firmware has never been built or flashed. Nothing here is hardware-verified.
+- Two other Azoteq drivers were considered: `beekeeb/zmk_driver_azoteq`
+  (`azoteq,tps43`, more features including power management, more recently
+  maintained, but its defaults are TPS43-tuned) and
+  `Ahmed-M-Osman1/zmk-driver-azoteq` (same `azoteq,iqs5xx` compatible as the one
+  in use, so the two cannot coexist; its README is still the ZMK module template).
+  Switching means changing `config/west.yml` and the node in `slabboard_left.overlay`.
 - `nice_nano//zmk` is kept as the board string because that is what the previous
   repo was building with.
 - The previous `build.yaml` set `snippet:` twice in one entry (`studio-rpc-usb-uart`

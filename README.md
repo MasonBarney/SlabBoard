@@ -9,7 +9,7 @@ nice!nano v2 halves.
 | Diode direction | `col2row` |
 | Split | BLE, left half is central |
 | Right half | EC12 rotary encoder, nice!view display |
-| Left half | Azoteq TPS65 trackpad *(not yet wired up — see below)* |
+| Left half | Azoteq TPS65 trackpad (I²C) |
 | Underglow | none, this board has no LEDs |
 
 ## Building
@@ -38,19 +38,26 @@ nicekeyboards' [official nice!nano v2 pinout](https://nicekeyboards.com/static/1
 | ROW 0–4 | `P0.22`, `P0.24`, `P1.00`, `P0.11`, `P1.04` |
 | COL 0–5 (left) | `P1.06`, `P0.09`, `P1.15`, `P0.02`, `P0.29`, `P0.31` |
 | COL 6–11 (right) | the same six, reversed, with `col-offset = <6>` |
-| EC12 encoder | A `P0.17`, B `P0.20` |
+| EC12 encoder (right) | A `P0.17`, B `P0.20` |
+| TPS65 trackpad (left) | SDA `P0.17`, SCL `P0.20`, RDY `P1.11` |
 | nice!view | SCK `P0.10`, MOSI `P1.01`, CS `P1.11` |
 
 The right half reverses its column list because the halves are mirror images of
 each other. If a build types the right half backwards, that reversal is the thing
 to undo — `slabboard_right.overlay` marks the spot.
 
+## Trackpad
+
+The Azoteq TPS65 on the left half runs over I²C on `i2c0`, driven by
+[AYM1607/zmk-driver-azoteq-iqs5xx](https://github.com/AYM1607/zmk-driver-azoteq-iqs5xx) — an external ZMK module pulled in by `config/west.yml`. Its README lists
+the TPS65 as tested. Gesture and tuning options are documented in that module's
+`dts/bindings/input/azoteq,iqs5xx-common.yaml`.
+
+`P0.17` and `P0.20` do double duty: I²C on the left half, encoder A/B on the
+right. Each half only enables its own.
+
 ## Not yet wired up
 
-- **Azoteq TPS65 trackpad** (left half: SDA `P0.17`, SCL `P0.20`, RDY `P1.11`).
-  ZMK has no in-tree Azoteq driver, so this needs an external west module.
-  `slabboard_left.overlay` carries a commented stub whose `compatible` string and
-  property names are **placeholders** — replace them with the real binding.
 - **EC12 push switch** (`P1.02` pad). The 5×6 grid is full, so the switch has no
   matrix position; it needs a `zmk,kscan-gpio-direct` plus `kscan-composite` and a
   61st keymap entry.

@@ -302,7 +302,7 @@
     <circle cx="380" cy="78" r="3.5" class="pad"/>
     <circle cx="300" cy="78" r="4" class="dot neutral"/>
     <text x="372" y="73" text-anchor="end" class="silk neutral">RAW</text>
-    <text x="292" y="82" text-anchor="end" class="assign neutral">unused — battery via B+/B− pads</text>
+    <text x="292" y="82" text-anchor="end" class="assign neutral">unused — battery via B+/B−</text>
   </g>
   <g>
     <line x1="380" y1="120" x2="300" y2="120" class="leader neutral"/>
@@ -518,7 +518,7 @@
         <caption>Power &amp; reset — both halves</caption>
         <thead><tr><th>Function</th><th>Pad</th></tr></thead>
         <tbody>
-          <tr><td>Battery +/&minus;</td><td class="pin">B+ / B&minus; pads</td></tr>
+          <tr><td>Battery +/&minus;</td><td class="pin">B+ / B&minus;</td></tr>
           <tr><td>On/off switch</td><td class="pin">inline on battery + lead</td></tr>
           <tr><td>Reset button</td><td class="pin">RST &rarr; GND</td></tr>
         </tbody>
@@ -537,8 +537,8 @@
       (<code>sharp,ls0xx</code>), which takes chip-select, clock and data only — an earlier version of this
       page showed a D/C line on P0.06 that does not exist on the part. Display signals now sit on
       <code>P0.10</code>, <code>P1.01</code> and <code>P1.11</code>, matching the firmware's <code>spi3</code>.
-      Two of them land on underside pads rather than header pins, because the header has exactly one
-      free pin left.
+      One of them, MOSI, lands on <code>P1.01</code> — an inner through-hole rather than an edge-header
+      pin — because the header has exactly one free pin left. It is a normal plated hole, not a pad.
     </p>
     <div class="diagram-wrap">
 <svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 right half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 spare, P1.11 as nice!view chip select, P0.10 as nice!view SCK, and P0.09 as matrix column 1. Right column top to bottom: P0.06 and P0.08 spare, two GND pins, P0.17 and P0.20 as EC12 encoder A and B, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
@@ -552,7 +552,7 @@
     <circle cx="380" cy="78" r="3.5" class="pad"/>
     <circle cx="300" cy="78" r="4" class="dot neutral"/>
     <text x="372" y="73" text-anchor="end" class="silk neutral">RAW</text>
-    <text x="292" y="82" text-anchor="end" class="assign neutral">unused — battery via B+/B− pads</text>
+    <text x="292" y="82" text-anchor="end" class="assign neutral">unused — battery via B+/B−</text>
   </g>
   <g>
     <line x1="380" y1="120" x2="300" y2="120" class="leader neutral"/>
@@ -760,7 +760,7 @@
           <tr><td>A</td><td class="pin">P0.17</td></tr>
           <tr><td>B</td><td class="pin">P0.20</td></tr>
           <tr><td>C (common)</td><td class="pin">GND</td></tr>
-          <tr><td>SW leg 1</td><td class="pin">P1.02 &mdash; underside pad</td></tr>
+          <tr><td>SW leg 1</td><td class="pin">P1.02 &mdash; inner hole</td></tr>
           <tr><td>SW leg 2</td><td class="pin">GND</td></tr>
         </tbody>
       </table>
@@ -771,18 +771,18 @@
           <tr><td>VCC</td><td class="pin">VCC</td></tr>
           <tr><td>GND</td><td class="pin">GND</td></tr>
           <tr><td>SCK</td><td class="pin">P0.10</td></tr>
-          <tr><td>MOSI</td><td class="pin">P1.01 &mdash; underside pad</td></tr>
+          <tr><td>MOSI</td><td class="pin">P1.01 &mdash; inner hole</td></tr>
           <tr><td>CS</td><td class="pin">P1.11</td></tr>
         </tbody>
       </table>
       <table>
-        <caption>Underside pads</caption>
-        <thead><tr><th>Pad</th><th>Use</th></tr></thead>
+        <caption>Inner through-holes</caption>
+        <thead><tr><th>Hole</th><th>Use</th></tr></thead>
         <tbody>
           <tr><td>P1.01</td><td class="pin">nice!view MOSI</td></tr>
           <tr><td>P1.02</td><td class="pin">EC12 SW</td></tr>
           <tr><td>P1.07</td><td class="pin">spare GPIO</td></tr>
-          <tr><td>SWD / SWC</td><td class="pin">SWD programming — leave alone</td></tr>
+          <tr><td>SWD / SWC</td><td class="pin">programming pads, not holes — leave alone</td></tr>
         </tbody>
       </table>
     </div>
@@ -915,10 +915,12 @@
         <li><b>Both dialects appear in ZMK configs.</b> <code>&amp;gpio0 22</code> and <code>&amp;pro_micro 4</code>
           address the same physical pin. Pick one and stay with it across your matrix transform, encoder and
           display nodes — mixing them in one file is where wiring bugs hide.</li>
-        <li><b>Two display signals are on the underside.</b> nice!view MOSI goes to the <code>P1.01</code>
-          pad and the EC12 switch to <code>P1.02</code>, because the 18-pin header is fully committed once the
-          matrix, trackball and encoder are wired. Those pads are smaller than the header holes — tin them
-          first and use thin wire.</li>
+        <li><b>Two signals land on the inner holes.</b> nice!view MOSI goes to <code>P1.01</code> and the
+          EC12 switch to <code>P1.02</code>, because the 18-pin edge header is fully committed once the matrix,
+          trackpad and encoder are wired. <code>P1.01</code>, <code>P1.02</code> and <code>P1.07</code> are
+          ordinary plated through-holes, the same size as the header ones — they just sit inboard of the two
+          edge rows instead of on them. Solder them exactly like any other pin. (The small square SWD/SWC
+          contacts next to them <em>are</em> surface pads — those are for programming, leave them alone.)</li>
         <li><b>TPS65 RDY is optional.</b> Some Azoteq TPS65 breakouts don't expose a data-ready line — if yours
           doesn't, leave P1.11 unused on the left half and poll the trackpad over I&sup2;C instead.</li>
         <li><b>EC12 leg order varies by part.</b> Confirm which of the five legs is the shared common (C) with a

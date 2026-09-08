@@ -71,7 +71,7 @@ index column, COL 11 the outer pinky.
 | VCC | VCC |
 | GND | GND |
 | SCK | `P0.10` |
-| MOSI | `P1.01` — underside pad |
+| MOSI | `P1.01` — inner through-hole |
 | CS | `P1.11` |
 
 The nice!view is a Sharp memory-in-pixel LCD (`sharp,ls0xx`). It takes
@@ -84,7 +84,7 @@ chip-select, clock and data only — **there is no D/C line to wire.**
 | A | `P0.17` |
 | B | `P0.20` |
 | C (common) | GND |
-| SW leg 1 | `P1.02` — underside pad |
+| SW leg 1 | `P1.02` — inner through-hole |
 | SW leg 2 | GND |
 
 The push switch is not in the firmware yet: the 5×6 grid is full, so it needs a
@@ -120,9 +120,11 @@ sits at I²C address `0x74` on `i2c0`. No reset line is wired — the driver tre
 - **`P0.09` and `P0.10` are the nRF52840's NFC pins.** They only work as GPIO with
   `CONFIG_NFCT_PINS_AS_GPIO=y`, which ZMK's nice!nano board definition sets.
   `P0.09` is COL 1 and `P0.10` is the display clock, so both halves depend on it.
-- **Two signals land on underside pads** (`P1.01`, `P1.02`) because the 18-pin
-  header is fully committed. They are smaller than the header holes — tin them
-  first and use thin wire.
+- **Two signals land on the inner holes** (`P1.01`, `P1.02`) because the 18-pin
+  edge header is fully committed. `P1.01`, `P1.02` and `P1.07` are ordinary plated
+  through-holes, the same size as the header ones — they just sit inboard of the two
+  edge rows instead of on them, so solder them exactly like any other pin. The small
+  square SWD/SWC contacts beside them *are* surface pads, for programming; leave them.
 - **EC12 leg order varies by part.** Confirm the shared common with a continuity
   beep before soldering.
 - **Diode direction must be consistent across all 60 keys** and must match

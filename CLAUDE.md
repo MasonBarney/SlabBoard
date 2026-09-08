@@ -19,7 +19,7 @@ the published wiring diagram exactly.
 - **Split**: BLE, **left half is central**
 - **Encoder** (right only): EC12, A `P0.17` / B `P0.20`; `disabled` in the dtsi,
   enabled in `slabboard_right.overlay`
-- **nice!view** (right only): SPI3 — SCK `P0.10`, MOSI `P1.01` (underside pad),
+- **nice!view** (right only): SPI3 — SCK `P0.10`, MOSI `P1.01` (inner through-hole),
   CS `P1.11`. Sharp `ls0xx` memory LCD: chip-select/clock/data only, **no D/C line**
 - **Trackpad** (left only): Azoteq TPS65 on `i2c0` — SDA `P0.17`, SCL `P0.20`,
   RDY `P1.11`, address `0x74`, `compatible = "azoteq,iqs5xx"`. Driver is the
@@ -32,7 +32,7 @@ the published wiring diagram exactly.
 
 ### Not yet wired up
 
-- **EC12 push switch** (`P1.02` pad). The 5×6 grid is full, so the switch cannot
+- **EC12 push switch** (`P1.02`). The 5×6 grid is full, so the switch cannot
   live in the matrix; it needs a `zmk,kscan-gpio-direct` plus `kscan-composite`
   and a 61st keymap position.
 
@@ -67,8 +67,10 @@ throughout — keep it that way.
 | `P1.04` | 8 | | `P0.10` | MOSI / 16 |
 | `P1.06` | 9 | | `P0.09` | 10 |
 
-Also broken out on the underside: `P1.01`, `P1.02`, `P1.07`, plus SWD/SWC and the
-`B+`/`B−` battery pads.
+Three more GPIO — `P1.01`, `P1.02`, `P1.07` — are brought out as plated through-holes
+set inboard of the two edge headers, not on them. They are ordinary holes the same size
+as the header ones, so they solder the same way. The small square SWD/SWC contacts beside
+them are true surface pads, for programming only. `B+`/`B−` carry the battery.
 
 **Orientation**: labels are printed on the **bottom**. Read a pinout with the labels
 facing you and USB-C pointing away — RAW falls on the left, `P0.06` on the right.

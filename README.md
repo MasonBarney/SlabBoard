@@ -40,7 +40,10 @@ nicekeyboards' [official nice!nano v2 pinout](https://nicekeyboards.com/static/1
 | COL 6–11 (right) | the same six, reversed, with `col-offset = <6>` |
 | EC12 encoder (right) | A `P0.17`, B `P0.20` |
 | TPS65 trackpad (left) | SDA `P0.17`, SCL `P0.20`, RDY `P1.11` |
-| nice!view | SCK `P0.10`, MOSI `P1.01`, CS `P1.11` |
+
+\* `P1.01`, `P1.02` and `P1.07` are plated through-holes set inboard of the two edge
+headers rather than on them — ordinary holes, same size, soldered the same way.
+| nice!view | SCK `P0.10`, MOSI `P1.01`\*, CS `P1.11` |
 
 The right half reverses its column list because the halves are mirror images of
 each other. If a build types the right half backwards, that reversal is the thing
@@ -58,7 +61,7 @@ right. Each half only enables its own.
 
 ## Not yet wired up
 
-- **EC12 push switch** (`P1.02` pad). The 5×6 grid is full, so the switch has no
+- **EC12 push switch** (`P1.02`). The 5×6 grid is full, so the switch has no
   matrix position; it needs a `zmk,kscan-gpio-direct` plus `kscan-composite` and a
   61st keymap entry.
 

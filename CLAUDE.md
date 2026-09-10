@@ -38,10 +38,21 @@ the published wiring diagram exactly.
 
 ## Other shields here
 
-`nice_view_gem` and `lpm_view` are display shields carried over from the previous
-config. `build.yaml` uses `nice_view_gem` on the right half. `lpm_view` is currently
-unusable with this shield: it attaches to a `lpm_view_spi` label that
-`slabboard_right.overlay` does not define — only `nice_view_spi` exists.
+The right half uses ZMK's **built-in `nice_view` shield**. It attaches to the
+`nice_view_spi` label that `slabboard_right.overlay` defines, ships its own
+`CONFIG_ZMK_DISPLAY=y`, and — unlike the vendored alternative — has a real peripheral
+code path (`widgets/peripheral_status.c`), which matters because the right half is the
+BLE peripheral.
+
+Two vendored display shields are still in the tree but **unused**:
+
+- `nice_view_gem` — a custom status screen. **It cannot build on a split peripheral.**
+  `widgets/output.c` reads `state->selected_endpoint` unguarded, but `util.h` only
+  defines that member `#if !ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL`; and its CMakeLists
+  excludes `screen.c` on a peripheral while `custom_status_screen.c` still calls into
+  it. It compiles on a central only. Using it here would mean either making the right
+  half central or patching the shield.
+- `lpm_view` — attaches to an `lpm_view_spi` label that no overlay defines.
 
 ## nice!nano v2 pin naming
 

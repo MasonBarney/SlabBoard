@@ -22,7 +22,7 @@ Two targets are built, both on `nice_nano//zmk`:
 | Shield | Extras |
 |---|---|
 | `slabboard_left` | ZMK Studio over USB (`studio-rpc-usb-uart`) |
-| `slabboard_right` | `nice_view_gem` display shield |
+| `slabboard_right` | `nice_view` display shield (ZMK built-in) |
 
 To flash, double-tap reset on a half to mount it as a USB drive, then copy the
 matching `.uf2` onto it.

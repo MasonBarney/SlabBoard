@@ -87,6 +87,8 @@ See [`CLAUDE.md`](CLAUDE.md) for the nice!nano silkscreen mapping and build note
 `config/slabboard.keymap` — four layers (Base / Lower / Raise / Adjust), 60
 bindings each, with an encoder binding per layer.
 
+[`docs/keymap.md`](docs/keymap.md) renders all four layers as grids.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).

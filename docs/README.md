@@ -1,5 +1,7 @@
 # SlabBoard wiring reference
 
+For the key layout rather than the wiring, see [`keymap.md`](keymap.md).
+
 Hand-wiring pinouts for the two nice!nano v2 halves. Pins are named as they are
 silkscreened on the board — raw nRF52840 port names (`P0.22`, `P1.15`), not Pro
 Micro D-numbers.

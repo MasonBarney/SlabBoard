@@ -60,9 +60,10 @@ HTML as source rather than rendering it, so download it and open it in a browser
 | COL 4 | `P0.29` | `&gpio0 29` |
 | COL 5 | `P0.31` | `&gpio0 31` |
 
-Both halves use the same pins. The right half lists its columns in reverse, with
-`col-offset = <6>`, because the halves are mirror images — COL 6 is the inner
-index column, COL 11 the outer pinky.
+Both halves use the same pins **in the same order**. This board's halves are wired
+identically — the same pin at the same position counting from the same edge — not as
+mirror images; confirmed by flashing. The right half differs only by
+`col-offset = <6>`, which shifts it into columns 6–11 of the matrix.
 
 ### nice!view display — right half
 

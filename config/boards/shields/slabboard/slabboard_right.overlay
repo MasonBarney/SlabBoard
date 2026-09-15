@@ -12,20 +12,19 @@
 
 &kscan0 {
     /*
-     * Reversed relative to the left half: the halves are mirror images, so
-     * the same pin sits at the mirrored position on each side. COL 6 is the
-     * inner index column, COL 11 the outer pinky.
-     *
-     * If your right half is instead wired identically to the left (same pin
-     * counting from the inner edge on both), reverse this list back.
+     * Same pin order as the left half. Verified on hardware: this board's
+     * two halves are wired identically -- the same pin sits at the same
+     * position counting from the same edge on both -- not as mirror images.
+     * An earlier version reversed this list on the mirror-image assumption
+     * and the right hand typed its rows backwards.
      */
     col-gpios
-        = <&gpio0 31 GPIO_ACTIVE_HIGH>   /* COL 6   P0.31 */
-        , <&gpio0 29 GPIO_ACTIVE_HIGH>   /* COL 7   P0.29 */
-        , <&gpio0  2 GPIO_ACTIVE_HIGH>   /* COL 8   P0.02 */
-        , <&gpio1 15 GPIO_ACTIVE_HIGH>   /* COL 9   P1.15 */
-        , <&gpio0  9 GPIO_ACTIVE_HIGH>   /* COL 10  P0.09 */
-        , <&gpio1  6 GPIO_ACTIVE_HIGH>   /* COL 11  P1.06 */
+        = <&gpio1  6 GPIO_ACTIVE_HIGH>   /* COL 6   P1.06 */
+        , <&gpio0  9 GPIO_ACTIVE_HIGH>   /* COL 7   P0.09 */
+        , <&gpio1 15 GPIO_ACTIVE_HIGH>   /* COL 8   P1.15 */
+        , <&gpio0  2 GPIO_ACTIVE_HIGH>   /* COL 9   P0.02 */
+        , <&gpio0 29 GPIO_ACTIVE_HIGH>   /* COL 10  P0.29 */
+        , <&gpio0 31 GPIO_ACTIVE_HIGH>   /* COL 11  P0.31 */
         ;
 };
 

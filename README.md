@@ -46,7 +46,7 @@ nicekeyboards' [official nice!nano v2 pinout](https://nicekeyboards.com/static/1
 |---|---|
 | ROW 0–4 | `P0.22`, `P0.24`, `P1.00`, `P0.11`, `P1.04` |
 | COL 0–5 (left) | `P1.06`, `P0.09`, `P1.15`, `P0.02`, `P0.29`, `P0.31` |
-| COL 6–11 (right) | the same six, reversed, with `col-offset = <6>` |
+| COL 6–11 (right) | the same six, same order, with `col-offset = <6>` |
 | EC12 encoder (right) | A `P0.17`, B `P0.20` |
 | TPS65 trackpad (left) | SDA `P0.17`, SCL `P0.20`, RDY `P1.11` |
 
@@ -54,9 +54,10 @@ nicekeyboards' [official nice!nano v2 pinout](https://nicekeyboards.com/static/1
 headers rather than on them — ordinary holes, same size, soldered the same way.
 | nice!view | SCK `P0.10`, MOSI `P1.01`\*, CS `P1.11` |
 
-The right half reverses its column list because the halves are mirror images of
-each other. If a build types the right half backwards, that reversal is the thing
-to undo — `slabboard_right.overlay` marks the spot.
+Both halves list their columns in the same order: this board's halves are wired
+identically — the same pin at the same position counting from the same edge — not
+as mirror images. Verified on hardware. The right half differs only by
+`col-offset = <6>`, which shifts it into columns 6–11 of the matrix.
 
 ## Trackpad
 

@@ -14,8 +14,8 @@ the published wiring diagram exactly.
 - **Rows** (both halves): `P0.22`, `P0.24`, `P1.00`, `P0.11`, `P1.04`
 - **Cols left** (COL 0 outer pinky → COL 5 inner index):
   `P1.06`, `P0.09`, `P1.15`, `P0.02`, `P0.29`, `P0.31`
-- **Cols right**: the same six pins **in reverse**, plus `col-offset = <6>`, because
-  the halves are mirror images. COL 6 is the inner index column, COL 11 outer pinky.
+- **Cols right**: the same six pins in the **same order**, plus `col-offset = <6>`.
+  The halves are wired identically, not mirrored — verified on hardware.
 - **Split**: BLE, **left half is central**
 - **Encoder** (right only): EC12, A `P0.17` / B `P0.20`; `disabled` in the dtsi,
   enabled in `slabboard_right.overlay`
@@ -113,10 +113,6 @@ is COL 1 and `P0.10` is the display clock, so both halves depend on it.
 
 ## Open questions
 
-- **Right-half column order is the most likely thing to be wrong.** `slabboard_right.overlay`
-  assumes the halves are wired as mirror images and reverses the column list. If the
-  right half is instead wired identically to the left, un-reverse it — the comment in
-  that file says where.
 - The firmware has never been built or flashed. Nothing here is hardware-verified.
 - Two other Azoteq drivers were considered: `beekeeb/zmk_driver_azoteq`
   (`azoteq,tps43`, more features including power management, more recently

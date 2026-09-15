@@ -7,14 +7,26 @@
 #include "slabboard.dtsi"
 
 &kscan0 {
-    /* COL 0 (outer pinky) -> COL 5 (inner index) */
+    /*
+     * COL 0 (outer pinky) -> COL 5 (inner index).
+     *
+     * Reversed relative to the right half. Both halves are wired the same way
+     * physically -- P1.06 is the INNER (index) column and P0.31 the OUTER
+     * (pinky) column on each -- and one is flipped over, so they are mirror
+     * images. Keymap columns run left to right across the whole board, so the
+     * outer pinky is COL 0 here but COL 11 on the right; hence this list is
+     * reversed and the right half's is not.
+     *
+     * Verified on hardware: with this list in P1.06-first order the left hand
+     * typed its rows backwards.
+     */
     col-gpios
-        = <&gpio1  6 GPIO_ACTIVE_HIGH>   /* COL 0  P1.06 */
-        , <&gpio0  9 GPIO_ACTIVE_HIGH>   /* COL 1  P0.09 */
-        , <&gpio1 15 GPIO_ACTIVE_HIGH>   /* COL 2  P1.15 */
-        , <&gpio0  2 GPIO_ACTIVE_HIGH>   /* COL 3  P0.02 */
-        , <&gpio0 29 GPIO_ACTIVE_HIGH>   /* COL 4  P0.29 */
-        , <&gpio0 31 GPIO_ACTIVE_HIGH>   /* COL 5  P0.31 */
+        = <&gpio0 31 GPIO_ACTIVE_HIGH>   /* COL 0  P0.31  outer pinky */
+        , <&gpio0 29 GPIO_ACTIVE_HIGH>   /* COL 1  P0.29 */
+        , <&gpio0  2 GPIO_ACTIVE_HIGH>   /* COL 2  P0.02 */
+        , <&gpio1 15 GPIO_ACTIVE_HIGH>   /* COL 3  P1.15 */
+        , <&gpio0  9 GPIO_ACTIVE_HIGH>   /* COL 4  P0.09 */
+        , <&gpio1  6 GPIO_ACTIVE_HIGH>   /* COL 5  P1.06  inner index */
         ;
 };
 

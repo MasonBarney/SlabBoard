@@ -12,11 +12,13 @@
 
 &kscan0 {
     /*
-     * Same pin order as the left half. Verified on hardware: this board's
-     * two halves are wired identically -- the same pin sits at the same
-     * position counting from the same edge on both -- not as mirror images.
-     * An earlier version reversed this list on the mirror-image assumption
-     * and the right hand typed its rows backwards.
+     * NOT reversed. Both halves are wired the same way physically -- P1.06 is
+     * the INNER (index) column and P0.31 the OUTER (pinky) column on each --
+     * and one is flipped over, so they are mirror images. On this half the
+     * inner column is the leftmost in keymap order, so the list runs
+     * P1.06 -> P0.31 and the LEFT half carries the reversal instead.
+     *
+     * Verified on hardware: this order types correctly.
      */
     col-gpios
         = <&gpio1  6 GPIO_ACTIVE_HIGH>   /* COL 6   P1.06 */

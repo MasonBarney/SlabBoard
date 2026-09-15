@@ -13,9 +13,16 @@ the published wiring diagram exactly.
 - **Diode direction**: `col2row` — columns are driven, rows are read with pull-downs
 - **Rows** (both halves): `P0.22`, `P0.24`, `P1.00`, `P0.11`, `P1.04`
 - **Cols left** (COL 0 outer pinky → COL 5 inner index):
-  `P1.06`, `P0.09`, `P1.15`, `P0.02`, `P0.29`, `P0.31`
-- **Cols right**: the same six pins in the **same order**, plus `col-offset = <6>`.
-  The halves are wired identically, not mirrored — verified on hardware.
+  `P0.31`, `P0.29`, `P0.02`, `P1.15`, `P0.09`, `P1.06`
+- **Cols right** (COL 6 inner index → COL 11 outer pinky): the same six pins
+  **reversed** relative to the left, plus `col-offset = <6>`.
+
+  The halves are **mirror images**: `P1.06` is the inner column and `P0.31` the outer
+  column on both. Keymap columns run left to right across the board, so the outer
+  pinky is COL 0 on the left and COL 11 on the right — hence the reversal sits on the
+  **left** half. Both directions verified on hardware: reversing the right instead
+  made the right hand type backwards, and leaving neither reversed made the left do
+  the same.
 - **Split**: BLE, **left half is central**
 - **Encoder** (right only): EC12, A `P0.17` / B `P0.20`; `disabled` in the dtsi,
   enabled in `slabboard_right.overlay`

@@ -2,6 +2,11 @@
 #
 # SlabBoard: two nice!nano halves, BLE split, left half central.
 # The right half carries the EC12 encoder and the nice!view display.
+#
+# Flash BOTH halves from the SAME workflow run — see config/west.yml for why.
+# settings_reset is a ZMK utility image: flash it to a half to wipe stored
+# Bluetooth bonds, then flash the real firmware back. Use it if the halves
+# will not pair.
 
 include:
   - board: nice_nano//zmk
@@ -10,3 +15,6 @@ include:
 
   - board: nice_nano//zmk
     shield: slabboard_right nice_view
+
+  - board: nice_nano//zmk
+    shield: settings_reset

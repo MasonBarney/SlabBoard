@@ -30,6 +30,19 @@ the published wiring diagram exactly.
 - **Keymap**: `config/slabboard.keymap` — 4 layers (Base / Lower / Raise / Adjust),
   60 bindings each, encoder sensor-binding per layer
 
+## Pinned revisions
+
+`config/west.yml` pins ZMK to `641514a9` and the Azoteq driver to `27321f02` —
+the revisions behind the first fully green build. This is deliberate: the two
+halves of a split must be built against the same ZMK, and `revision: main`
+resolves differently on every build, so rebuilding one half later could pair a
+new split protocol against an old one. Bump the pins on purpose, and reflash
+**both** halves from the same run when you do.
+
+`build.yaml` also builds ZMK's `settings_reset` utility image. Flash it to a half
+to wipe stored Bluetooth bonds, then flash the real firmware back — the standard
+fix when split halves will not pair.
+
 ### Not yet wired up
 
 - **EC12 push switch** (`P1.02`). The 5×6 grid is full, so the switch cannot

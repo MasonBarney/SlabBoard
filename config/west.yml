@@ -1,3 +1,14 @@
+# ZMK and modules are PINNED to exact revisions on purpose.
+#
+# The two halves of a split must be built against the same ZMK. With
+# `revision: main` each build resolves whatever main happens to be at that
+# moment, so rebuilding one half weeks after the other can silently pair a
+# new split protocol against an old one — the halves then refuse to connect
+# and nothing in the build output says why.
+#
+# These SHAs are the ones that produced the first fully green build
+# (run #4, 2026-09-10). Bump them deliberately, and reflash BOTH halves
+# from the same run when you do.
 manifest:
   remotes:
     - name: zmk
@@ -7,11 +18,11 @@ manifest:
   projects:
     - name: zmk
       remote: zmk
-      revision: main
+      revision: 641514a97db345f499dd50b0360e594270f008fe
       import: app/west.yml
     # Azoteq IQS5xx trackpad driver. README lists the TPS65 as tested.
     - name: zmk-driver-azoteq-iqs5xx
       remote: aym1607
-      revision: main
+      revision: 27321f0232b50f0af31eb27ff97d539933467ea4
   self:
     path: config

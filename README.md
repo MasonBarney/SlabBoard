@@ -23,6 +23,15 @@ Two targets are built, both on `nice_nano//zmk`:
 |---|---|
 | `slabboard_left` | ZMK Studio over USB (`studio-rpc-usb-uart`) |
 | `slabboard_right` | `nice_view` display shield (ZMK built-in) |
+| `settings_reset` | ZMK utility image — wipes stored Bluetooth bonds |
+
+**Flash both halves from the same workflow run.** ZMK and its modules are pinned
+to exact revisions in `config/west.yml` so that rebuilds stay compatible; a split
+whose halves were built against different ZMK versions may refuse to pair, with
+nothing in the build log to explain it.
+
+If the halves will not pair, flash `settings_reset.uf2` to each one, then flash the
+real firmware back.
 
 To flash, double-tap reset on a half to mount it as a USB drive, then copy the
 matching `.uf2` onto it.

@@ -291,7 +291,7 @@
       <span>silkscreen side &middot; USB-C at top &middot; RAW column on the left</span>
     </div>
     <div class="diagram-wrap">
-<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 left half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 spare, P1.11 as the TPS65 ready line, P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 and P0.08 spare, two GND pins, P0.17 as TPS65 SDA, P0.20 as TPS65 SCL, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
+<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 left half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 as the TPS65 reset line, P1.11 as the TPS65 ready line, P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 and P0.08 spare, two GND pins, P0.17 as TPS65 SDA, P0.20 as TPS65 SCL, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
   <rect class="boardbody" x="380" y="40" width="140" height="520" rx="10"/>
   <rect class="usbnotch" x="415" y="16" width="70" height="26" rx="4"/>
   <text class="usblabel" x="450" y="34" text-anchor="middle">USB-C</text>
@@ -358,11 +358,11 @@
     <text x="292" y="383" text-anchor="end" class="alias">A0 · pro_micro 18</text>
   </g>
   <g>
-    <line x1="380" y1="414" x2="300" y2="414" class="leader spare"/>
+    <line x1="380" y1="414" x2="300" y2="414" class="leader i2c"/>
     <circle cx="380" cy="414" r="3.5" class="pad"/>
-    <circle cx="300" cy="414" r="4" class="dot spare"/>
-    <text x="372" y="409" text-anchor="end" class="silk spare">P1.13</text>
-    <text x="292" y="413" text-anchor="end" class="assign spare">spare</text>
+    <circle cx="300" cy="414" r="4" class="dot i2c"/>
+    <text x="372" y="409" text-anchor="end" class="silk i2c">P1.13</text>
+    <text x="292" y="413" text-anchor="end" class="assign i2c">TPS65 RST</text>
     <text x="292" y="425" text-anchor="end" class="alias">SCK · pro_micro 15</text>
   </g>
   <g>
@@ -504,16 +504,7 @@
         </tbody>
       </table>
       <table>
-        <caption>Azoteq TPS65 trackpad (I&sup2;C) — left half</caption>
-        <thead><tr><th>TPS65 pad</th><th>Silkscreen</th></tr></thead>
-        <tbody>
-          <tr><td>VCC</td><td class="pin">VCC</td></tr>
-          <tr><td>GND</td><td class="pin">GND</td></tr>
-          <tr><td>SDA</td><td class="pin">P0.17</td></tr>
-          <tr><td>SCL</td><td class="pin">P0.20</td></tr>
-          <tr><td>RDY (if broken out)</td><td class="pin">P1.11</td></tr>
-        </tbody>
-      </table>
+        <caption>Azoteq TPS65 trackpad (I&sup2;C) &mdash; left half</caption><thead><tr><th>Azoteq pad</th><th>Silkscreen</th></tr></thead><tbody><tr><td>RDY</td><td class="pin">P1.11</td></tr><tr><td>RST</td><td class="pin">P1.13</td></tr><tr><td>GND</td><td class="pin">GND</td></tr><tr><td>3V3 <em>(the supply &mdash; there is no VCC pad)</em></td><td class="pin">VCC</td></tr><tr><td>SCL</td><td class="pin">P0.20</td></tr><tr><td>SDA</td><td class="pin">P0.17</td></tr></tbody></table>
       <table>
         <caption>Power &amp; reset — both halves</caption>
         <thead><tr><th>Function</th><th>Pad</th></tr></thead>

@@ -79,6 +79,15 @@
          * state rather than whatever it was left in.
          */
 
+        /*
+         * X is inverted relative to how the pad is mounted -- verified on
+         * hardware: moving a finger left moved the pointer right, while Y was
+         * already correct. flip-x sets IQS5XX_FLIP_X in the chip's own XY
+         * config register, so the pad reports corrected coordinates rather
+         * than the driver negating them afterwards.
+         */
+        flip-x;
+
         one-finger-tap;
         two-finger-tap;
         press-and-hold;
@@ -93,9 +102,10 @@
         device = <&trackpad>;
 
         /*
-         * If the pointer moves along the wrong axis or in the wrong direction
-         * once it is working, correct it here rather than by rewiring — the
-         * driver also offers switch-xy / flip-x / flip-y on the node above.
+         * Axis direction is handled on the trackpad node above (flip-x), not
+         * here -- the driver's switch-xy / flip-x / flip-y are applied inside
+         * the IQS5xx itself. Input processors remain available for anything
+         * the driver cannot express.
          * See https://zmk.dev/docs/keymaps/input-processors
          */
         // input-processors = <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)>;

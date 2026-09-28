@@ -31,7 +31,8 @@ the published wiring diagram exactly.
 - **Trackpad** (left only): Azoteq TPS65 on `i2c0` — SDA `P0.17`, SCL `P0.20`,
   RDY `P1.11`, RST `P1.13` (active low), address `0x74`,
   `compatible = "azoteq,iqs5xx"`. The Azoteq board has no VCC pad: its `3V3` pad is
-  the supply and connects to the nice!nano's `VCC` pin.
+  the supply and connects to the nice!nano's `VCC` pin. `flip-x` is set: as mounted,
+  X reads inverted while Y is correct (verified on hardware).
   Free header pins remaining on the left: `P0.06`, `P0.08`, `P0.10`. Driver is the
   external module `AYM1607/zmk-driver-azoteq-iqs5xx`, pinned in `config/west.yml`.
   `P0.17`/`P0.20` are I²C on the left and encoder A/B on the right; each half

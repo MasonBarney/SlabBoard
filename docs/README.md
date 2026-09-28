@@ -96,13 +96,28 @@ The push switch is not in the firmware yet: the 5×6 grid is full, so it needs a
 
 ### Azoteq TPS65 trackpad — left half
 
-| Pad | Silkscreen |
+Pads listed in silkscreen order, top to bottom, as they appear on the Azoteq board.
+Note it has no pad called VCC — `3V3` **is** the supply, and the nice!nano's `VCC`
+pin is its regulated 3.3 V rail, so those two connect together.
+
+| Azoteq pad | nice!nano |
 |---|---|
-| VCC | VCC |
-| GND | GND |
-| SDA | `P0.17` |
-| SCL | `P0.20` |
 | RDY | `P1.11` |
+| RST | `P1.13` |
+| GND | any GND |
+| **3V3** | **`VCC`** |
+| SCL | `P0.20` |
+| SDA | `P0.17` |
+
+`SCL` and `SDA` are the last two pads and easy to transpose — **SDA is `P0.17`,
+SCL is `P0.20`**. Swapped, the bus is simply dead with no other symptom.
+
+`GND` and `3V3` are adjacent pads; check continuity between them reads open before
+powering up.
+
+The IQS5xx runs at 1.65–3.6 V, so nothing on this board should ever see 5 V. Confirm
+the breakout has I²C pull-ups on SDA/SCL — Azoteq's own boards normally do. If not,
+fit 4.7 kΩ from each line to 3.3 V, since the bus is configured for 400 kHz.
 
 Driven by [AYM1607/zmk-driver-azoteq-iqs5xx](https://github.com/AYM1607/zmk-driver-azoteq-iqs5xx), an external ZMK module pulled in by `config/west.yml`. The pad
 sits at I²C address `0x74` on `i2c0`. No reset line is wired — the driver treats

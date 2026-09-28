@@ -48,7 +48,7 @@ nicekeyboards' [official nice!nano v2 pinout](https://nicekeyboards.com/static/1
 | COL 0–5 (left) | `P0.31`, `P0.29`, `P0.02`, `P1.15`, `P0.09`, `P1.06` |
 | COL 6–11 (right) | the same six **reversed**, with `col-offset = <6>` |
 | EC12 encoder (right) | A `P0.17`, B `P0.20` |
-| TPS65 trackpad (left) | SDA `P0.17`, SCL `P0.20`, RDY `P1.11` |
+| TPS65 trackpad (left) | SDA `P0.17`, SCL `P0.20`, RDY `P1.11`, RST `P1.13`, 3V3 → `VCC` |
 
 \* `P1.01`, `P1.02` and `P1.07` are plated through-holes set inboard of the two edge
 headers rather than on them — ordinary holes, same size, soldered the same way.

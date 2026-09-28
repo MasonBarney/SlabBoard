@@ -69,8 +69,15 @@
         reg = <0x74>;
         status = "okay";
 
-        rdy-gpios = <&gpio1 11 GPIO_ACTIVE_HIGH>;   /* RDY  P1.11 */
-        /* No reset line is wired to the pad; reset-gpios is optional. */
+        rdy-gpios   = <&gpio1 11 GPIO_ACTIVE_HIGH>;   /* RDY  P1.11 */
+        reset-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;    /* RST  P1.13 */
+
+        /*
+         * RST is active low on the IQS5xx, which is why this is GPIO_ACTIVE_LOW
+         * (matching the driver's own example). At init the driver asserts it,
+         * waits 1 ms, releases and waits 10 ms, so the pad starts from a known
+         * state rather than whatever it was left in.
+         */
 
         one-finger-tap;
         two-finger-tap;

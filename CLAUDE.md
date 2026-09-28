@@ -29,7 +29,10 @@ the published wiring diagram exactly.
 - **nice!view** (right only): SPI3 — SCK `P0.10`, MOSI `P1.01` (inner through-hole),
   CS `P1.11`. Sharp `ls0xx` memory LCD: chip-select/clock/data only, **no D/C line**
 - **Trackpad** (left only): Azoteq TPS65 on `i2c0` — SDA `P0.17`, SCL `P0.20`,
-  RDY `P1.11`, address `0x74`, `compatible = "azoteq,iqs5xx"`. Driver is the
+  RDY `P1.11`, RST `P1.13` (active low), address `0x74`,
+  `compatible = "azoteq,iqs5xx"`. The Azoteq board has no VCC pad: its `3V3` pad is
+  the supply and connects to the nice!nano's `VCC` pin.
+  Free header pins remaining on the left: `P0.06`, `P0.08`, `P0.10`. Driver is the
   external module `AYM1607/zmk-driver-azoteq-iqs5xx`, pinned in `config/west.yml`.
   `P0.17`/`P0.20` are I²C on the left and encoder A/B on the right; each half
   only enables its own.

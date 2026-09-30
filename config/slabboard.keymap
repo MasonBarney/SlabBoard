@@ -132,8 +132,7 @@
             bindings = <&Paste_Unformatted_Word>, <&kp LG(LA(LS(V)))>;
             mods = <(MOD_LSFT|MOD_RSFT)>;
         };
-
-
+    };
 };
 
 / {

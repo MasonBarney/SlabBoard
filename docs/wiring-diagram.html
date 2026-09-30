@@ -291,6 +291,14 @@
       <b>Bottom view</b>
       <span>silkscreen side &middot; USB-C at top &middot; RAW column on the left</span>
     </div>
+    <p class="lede">
+      This is the <b>central</b> half, so it carries the nice!view: a split peripheral cannot show a layer
+      indicator, because ZMK's split link never sends layer state across. <b>The nice!view has no D/C pin</b>
+      — it is a Sharp memory-in-pixel LCD (<code>sharp,ls0xx</code>), which takes chip-select, clock and
+      data only. Its three signals take this half's last free header pins, so the left half is fully
+      committed at 18 of 18 and only the <code>P1.01</code>, <code>P1.02</code> and <code>P1.07</code> inner
+      holes remain.
+    </p>
     <div class="diagram-wrap">
 <svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 left half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 as the TPS65 reset line, P1.11 as the TPS65 ready line, P0.10 as the nice!view clock, and P0.09 as matrix column 1. Right column top to bottom: P0.06 and P0.08 as the nice!view data and chip select, two GND pins, P0.17 as TPS65 SDA, P0.20 as TPS65 SCL, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
   <rect class="boardbody" x="380" y="40" width="140" height="520" rx="10"/>
@@ -505,6 +513,8 @@
         </tbody>
       </table>
       <table>
+        <caption>nice!view display (SPI) — left half (revision 2)</caption><thead><tr><th>nice!view pad</th><th>Silkscreen</th></tr></thead><tbody><tr><td>VCC</td><td class="pin">VCC</td></tr><tr><td>GND</td><td class="pin">GND</td></tr><tr><td>SCK</td><td class="pin">P0.10</td></tr><tr><td>MOSI</td><td class="pin">P0.06</td></tr><tr><td>CS</td><td class="pin">P0.08</td></tr></tbody></table>
+      <table>
         <caption>Azoteq TPS65 trackpad (I&sup2;C) &mdash; left half</caption><thead><tr><th>Azoteq pad</th><th>Silkscreen</th></tr></thead><tbody><tr><td>RDY</td><td class="pin">P1.11</td></tr><tr><td>RST</td><td class="pin">P1.13</td></tr><tr><td>GND</td><td class="pin">GND</td></tr><tr><td>3V3 <em>(the supply &mdash; there is no VCC pad)</em></td><td class="pin">VCC</td></tr><tr><td>SCL</td><td class="pin">P0.20</td></tr><tr><td>SDA</td><td class="pin">P0.17</td></tr></tbody></table>
       <table>
         <caption>Power &amp; reset — both halves</caption>
@@ -525,12 +535,12 @@
       <span>silkscreen side &middot; USB-C at top &middot; RAW column on the left</span>
     </div>
     <p class="lede">
-      <b>The nice!view has no D/C pin.</b> It is a Sharp memory-in-pixel LCD
-      (<code>sharp,ls0xx</code>), which takes chip-select, clock and data only — an earlier version of this
-      page showed a D/C line on P0.06 that does not exist on the part. Display signals now sit on
-      <code>P0.10</code>, <code>P1.01</code> and <code>P1.11</code>, matching the firmware's <code>spi3</code>.
-      One of them, MOSI, lands on <code>P1.01</code> — an inner through-hole rather than an edge-header
-      pin — because the header has exactly one free pin left. It is a normal plated hole, not a pad.
+      <b>No display on this half in revision 2.</b> The nice!view has moved to the left, so the three pins
+      it used here — <code>P0.10</code>, <code>P1.11</code> and the <code>P1.01</code> inner hole — are
+      free again. The only peripheral left is the EC12 encoder: A on <code>P0.17</code>, B on
+      <code>P0.20</code>, and the push switch on <code>P0.08</code>, three positions above A in the same
+      column, so the whole encoder harness runs as one block. That leaves <code>P1.13</code>,
+      <code>P1.11</code>, <code>P0.10</code> and <code>P0.06</code> spare on the header.
     </p>
     <div class="diagram-wrap">
 <svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 right half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13, P1.11 and P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 spare, P0.08 as the EC12 encoder push switch, two GND pins, P0.17 and P0.20 as EC12 encoder A and B, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
@@ -756,8 +766,6 @@
           <tr><td>SW leg 2</td><td class="pin">GND</td></tr>
         </tbody>
       </table>
-      <table>
-        <caption>nice!view display (SPI) — left half (revision 2)</caption><thead><tr><th>nice!view pad</th><th>Silkscreen</th></tr></thead><tbody><tr><td>VCC</td><td class="pin">VCC</td></tr><tr><td>GND</td><td class="pin">GND</td></tr><tr><td>SCK</td><td class="pin">P0.10</td></tr><tr><td>MOSI</td><td class="pin">P0.06</td></tr><tr><td>CS</td><td class="pin">P0.08</td></tr></tbody></table>
       <table>
         <caption>Inner through-holes — all spare in revision 2</caption>
         <thead><tr><th>Hole</th><th>Use</th></tr></thead>

@@ -72,9 +72,17 @@ right. Each half only enables its own.
 
 ## Not yet wired up
 
-- **EC12 push switch** (`P1.02`). The 5×6 grid is full, so the switch has no
-  matrix position; it needs a `zmk,kscan-gpio-direct` plus `kscan-composite` and a
-  61st keymap entry.
+- **EC12 push switch.** The 5×6 grid is full, so the switch has no matrix position;
+  it needs a `zmk,kscan-gpio-direct` plus `kscan-composite` and a 61st keymap entry.
+  This table places it on `P1.02` with the rest of revision 1; revision 2 moves it to
+  `P0.08`.
+
+## `docs/` describes revision 2, not this firmware
+
+The pin table above matches `config/`, which is **revision 1** — what is built and
+working. [`docs/`](docs/) has moved on to **revision 2**: the nice!view relocates to
+the left half (a split peripheral cannot show a layer indicator) and the encoder
+switch to `P0.08`. The two disagree on purpose until revision 2 is built.
 
 [`docs/`](docs/) has the full wiring reference — rendered pinout diagrams for both
 halves, complete pin tables, and the standalone HTML page with the diode/matrix and

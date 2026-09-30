@@ -168,7 +168,7 @@
       <div><dt>Left half adds</dt><dd>TPS65 trackpad (I&sup2;C) + nice!view (SPI)</dd></div>
       <div><dt>Right half adds</dt><dd>EC12 rotary encoder</dd></div>
     </dl>
-    <div class="reflink" style="border-left-color:var(--row)"><b>Revision 2</b><span>The nice!view has moved from the right half to the <b>left</b>. A split peripheral cannot show a layer indicator &mdash; ZMK's split link never carries layer state &mdash; so the display must sit on the central half. <b>The firmware still builds revision 1, with the display on the right.</b> Do not wire the prototype from this page.</span></div>
+    <div class="reflink" style="border-left-color:var(--row)"><b>Revision 2</b><span>Two changes from the built prototype. The nice!view has moved from the right half to the <b>left</b>: a split peripheral cannot show a layer indicator &mdash; ZMK's split link never carries layer state &mdash; so the display must sit on the central half. And the <b>EC12 push switch has moved off the <code>P1.02</code> inner hole onto <code>P0.08</code></b> on the edge header, where it always could have gone. Revision 2 uses edge-header pins only. <b>The firmware still builds revision 1, with the display on the right and the switch unimplemented.</b> Do not wire the prototype from this page.</span></div>
     <div class="reflink">
       <b>Cross-check</b>
       <span>Official nice!nano v2 pinout from nicekeyboards:
@@ -292,7 +292,7 @@
       <span>silkscreen side &middot; USB-C at top &middot; RAW column on the left</span>
     </div>
     <div class="diagram-wrap">
-<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 left half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 as the TPS65 reset line, P1.11 as the TPS65 ready line, P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 and P0.08 spare, two GND pins, P0.17 as TPS65 SDA, P0.20 as TPS65 SCL, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
+<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 left half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 as the TPS65 reset line, P1.11 as the TPS65 ready line, P0.10 as the nice!view clock, and P0.09 as matrix column 1. Right column top to bottom: P0.06 and P0.08 as the nice!view data and chip select, two GND pins, P0.17 as TPS65 SDA, P0.20 as TPS65 SCL, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
   <rect class="boardbody" x="380" y="40" width="140" height="520" rx="10"/>
   <rect class="usbnotch" x="415" y="16" width="70" height="26" rx="4"/>
   <text class="usblabel" x="450" y="34" text-anchor="middle">USB-C</text>
@@ -533,7 +533,7 @@
       pin — because the header has exactly one free pin left. It is a normal plated hole, not a pad.
     </p>
     <div class="diagram-wrap">
-<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 right half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 spare, P1.11 as nice!view chip select, P0.10 as nice!view SCK, and P0.09 as matrix column 1. Right column top to bottom: P0.06 and P0.08 spare, two GND pins, P0.17 and P0.20 as EC12 encoder A and B, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
+<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 right half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13, P1.11 and P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 spare, P0.08 as the EC12 encoder push switch, two GND pins, P0.17 and P0.20 as EC12 encoder A and B, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
   <rect class="boardbody" x="380" y="40" width="140" height="520" rx="10"/>
   <rect class="usbnotch" x="415" y="16" width="70" height="26" rx="4"/>
   <text class="usblabel" x="450" y="34" text-anchor="middle">USB-C</text>
@@ -565,7 +565,7 @@
     <circle cx="380" cy="204" r="3.5" class="pad"/>
     <circle cx="300" cy="204" r="4" class="dot neutral"/>
     <text x="372" y="199" text-anchor="end" class="silk neutral">VCC</text>
-    <text x="292" y="208" text-anchor="end" class="assign neutral">3V bus → nice!view VCC</text>
+    <text x="292" y="208" text-anchor="end" class="assign neutral">3V bus</text>
   </g>
   <g>
     <line x1="380" y1="246" x2="300" y2="246" class="leader col"/>
@@ -640,11 +640,11 @@
     <text x="608" y="89" text-anchor="start" class="alias">TXO · pro_micro 1</text>
   </g>
   <g>
-    <line x1="520" y1="120" x2="600" y2="120" class="leader spare"/>
+    <line x1="520" y1="120" x2="600" y2="120" class="leader enc"/>
     <circle cx="520" cy="120" r="3.5" class="pad"/>
-    <circle cx="600" cy="120" r="4" class="dot spare"/>
-    <text x="528" y="115" text-anchor="start" class="silk spare">P0.08</text>
-    <text x="608" y="119" text-anchor="start" class="assign spare">spare</text>
+    <circle cx="600" cy="120" r="4" class="dot enc"/>
+    <text x="528" y="115" text-anchor="start" class="silk enc">P0.08</text>
+    <text x="608" y="119" text-anchor="start" class="assign enc">EC12 SW</text>
     <text x="608" y="131" text-anchor="start" class="alias">RXI · pro_micro 0</text>
   </g>
   <g>
@@ -752,18 +752,18 @@
           <tr><td>A</td><td class="pin">P0.17</td></tr>
           <tr><td>B</td><td class="pin">P0.20</td></tr>
           <tr><td>C (common)</td><td class="pin">GND</td></tr>
-          <tr><td>SW leg 1</td><td class="pin">P1.02 &mdash; inner hole</td></tr>
+          <tr><td>SW leg 1</td><td class="pin">P0.08</td></tr>
           <tr><td>SW leg 2</td><td class="pin">GND</td></tr>
         </tbody>
       </table>
       <table>
         <caption>nice!view display (SPI) — left half (revision 2)</caption><thead><tr><th>nice!view pad</th><th>Silkscreen</th></tr></thead><tbody><tr><td>VCC</td><td class="pin">VCC</td></tr><tr><td>GND</td><td class="pin">GND</td></tr><tr><td>SCK</td><td class="pin">P0.10</td></tr><tr><td>MOSI</td><td class="pin">P0.06</td></tr><tr><td>CS</td><td class="pin">P0.08</td></tr></tbody></table>
       <table>
-        <caption>Inner through-holes</caption>
+        <caption>Inner through-holes — all spare in revision 2</caption>
         <thead><tr><th>Hole</th><th>Use</th></tr></thead>
         <tbody>
-          <tr><td>P1.01</td><td class="pin">nice!view MOSI</td></tr>
-          <tr><td>P1.02</td><td class="pin">EC12 SW</td></tr>
+          <tr><td>P1.01</td><td class="pin">spare GPIO</td></tr>
+          <tr><td>P1.02</td><td class="pin">spare GPIO</td></tr>
           <tr><td>P1.07</td><td class="pin">spare GPIO</td></tr>
           <tr><td>SWD / SWC</td><td class="pin">programming pads, not holes — leave alone</td></tr>
         </tbody>
@@ -894,17 +894,20 @@
           <code>nice_nano_v2</code> board definition enables it, so a stock ZMK build is fine — but if you ever
           move to a custom board definition, confirm it is still set or COL&nbsp;1 and the display MOSI line go dead.</li>
         <li><b>Peripheral pins are a choice, not a constraint.</b> The nRF52840 muxes any GPIO to any serial
-          peripheral through pinctrl, so I&sup2;C on P0.17/P0.20 and SPI on P0.10/P1.01 are conventions picked to keep
+          peripheral through pinctrl, so I&sup2;C on P0.17/P0.20 and SPI on P0.10/P0.06 are conventions picked to keep
           the matrix contiguous — not fixed-function pins. Move them if your layout wants it, and update pinctrl to match.</li>
         <li><b>Both dialects appear in ZMK configs.</b> <code>&amp;gpio0 22</code> and <code>&amp;pro_micro 4</code>
           address the same physical pin. Pick one and stay with it across your matrix transform, encoder and
           display nodes — mixing them in one file is where wiring bugs hide.</li>
-        <li><b>Two signals land on the inner holes.</b> nice!view MOSI goes to <code>P1.01</code> and the
-          EC12 switch to <code>P1.02</code>, because the 18-pin edge header is fully committed once the matrix,
-          trackpad and encoder are wired. <code>P1.01</code>, <code>P1.02</code> and <code>P1.07</code> are
-          ordinary plated through-holes, the same size as the header ones — they just sit inboard of the two
-          edge rows instead of on them. Solder them exactly like any other pin. (The small square SWD/SWC
-          contacts next to them <em>are</em> surface pads — those are for programming, leave them alone.)</li>
+        <li><b>Nothing lands on an inner hole any more.</b> Revision 1 pushed nice!view MOSI to
+          <code>P1.01</code> and the EC12 switch to <code>P1.02</code> on the grounds that the right half's
+          18-pin edge header was full. It was not — that half used 15 of 18, and <code>P1.13</code>,
+          <code>P0.06</code> and <code>P0.08</code> were free. Revision 2 puts both signals on header pins and
+          leaves <code>P1.01</code>, <code>P1.02</code> and <code>P1.07</code> spare. They are ordinary plated
+          through-holes, the same size as the header ones — they just sit inboard of the two edge rows
+          instead of on them — so solder them like any other pin if you do use them. (The small square
+          SWD/SWC contacts next to them <em>are</em> surface pads — those are for programming, leave them
+          alone.)</li>
         <li><b>TPS65 RDY is optional.</b> Some Azoteq TPS65 breakouts don't expose a data-ready line — if yours
           doesn't, leave P1.11 unused on the left half and poll the trackpad over I&sup2;C instead.</li>
         <li><b>EC12 leg order varies by part.</b> Confirm which of the five legs is the shared common (C) with a

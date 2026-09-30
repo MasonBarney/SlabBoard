@@ -8,9 +8,13 @@
 > invocation and HID indicators back the other way. Layer state never crosses it,
 > so the display has to live on the central half — which is the left.
 >
-> **The firmware in this repository still builds the display on the right (revision 1).**
-> Do not wire the prototype from this page. `config/` and `docs/` deliberately
-> disagree until revision 2 is built.
+> **The EC12 push switch has moved off the `P1.02` inner hole onto `P0.08`.** It never
+> needed to be on an inner hole: `P0.06` and `P0.08` were spare on the right half in
+> revision 1 too. Revision 2 uses edge-header pins only, on both halves.
+>
+> **The firmware in this repository still builds the display on the right (revision 1),
+> and does not implement the encoder switch at all.** Do not wire the prototype from
+> this page. `config/` and `docs/` deliberately disagree until revision 2 is built.
 
 
 For the key layout rather than the wiring, see [`keymap.md`](keymap.md).
@@ -92,11 +96,11 @@ flashing both halves.
 | CS | `P0.08` |
 
 All three signals land on edge-header pins here, so revision 2 needs no inner
-through-hole for the display — an improvement on revision 1, which put MOSI on
-`P1.01` because the right half's header was full.
+through-hole for the display.
 
 This fills the left half's last three free header pins. After this it is fully
-committed: 18 of 18, with only the `P1.01`, `P1.02` and `P1.07` pads spare.
+committed: 18 of 18, with the `P1.01`, `P1.02` and `P1.07` inner through-holes
+the only GPIO left on that half.
 
 The nice!view is a Sharp memory-in-pixel LCD (`sharp,ls0xx`). It takes
 chip-select, clock and data only — **there is no D/C line to wire.**
@@ -108,11 +112,22 @@ chip-select, clock and data only — **there is no D/C line to wire.**
 | A | `P0.17` |
 | B | `P0.20` |
 | C (common) | GND |
-| SW leg 1 | `P1.02` — inner through-hole |
+| SW leg 1 | `P0.08` |
 | SW leg 2 | GND |
 
+`P0.08` sits three positions above `P0.17` in the same column, so the encoder's whole
+harness — SW, its GND leg, the common GND leg, A and B — lands in one contiguous run.
+
+Revision 1 put this switch on the `P1.02` inner through-hole on the mistaken grounds
+that the right half's header was full. It was not: with the matrix and the encoder's A
+and B wired, the right half used 15 of 18 header pins and `P1.13`, `P0.06` and `P0.08`
+were all free. Revision 2 corrects that. Moving the display off this half is what makes
+the count comfortable rather than what makes it possible — with the switch on `P0.08`,
+the right half uses 14 of 18 and leaves `P1.13`, `P1.11`, `P0.10` and `P0.06` spare.
+
 The push switch is not in the firmware yet: the 5×6 grid is full, so it needs a
-`zmk,kscan-gpio-direct` plus `kscan-composite` and a 61st keymap position.
+`zmk,kscan-gpio-direct` plus `kscan-composite` and a 61st keymap position. Wiring it
+costs nothing if it stays unbound.
 
 ### Azoteq TPS65 trackpad — left half
 
@@ -159,13 +174,13 @@ sits at I²C address `0x74` on `i2c0`. No reset line is wired — the driver tre
 - **`P0.09` and `P0.10` are the nRF52840's NFC pins.** They only work as GPIO with
   `CONFIG_NFCT_PINS_AS_GPIO=y`, which ZMK's nice!nano board definition sets.
   `P0.09` is COL 1 and `P0.10` is the display clock, so both halves depend on it.
-- **One signal lands on an inner hole** (`P1.02`, the encoder switch) because the
-  right half's edge header was full in revision 1. With the display moved off that
-  half, `P1.11` and `P0.10` free up, so revision 2 can put the switch on a header
-  pin instead. `P1.01`, `P1.02` and `P1.07` are ordinary plated
-  through-holes, the same size as the header ones — they just sit inboard of the two
-  edge rows instead of on them, so solder them exactly like any other pin. The small
-  square SWD/SWC contacts beside them *are* surface pads, for programming; leave them.
+- **Revision 2 uses edge-header pins only.** Revision 1 pushed nice!view MOSI to
+  `P1.01` and the encoder switch to `P1.02`; neither had to go there, since `P0.06` and
+  `P0.08` were spare on that half. Both are on header pins now, and `P1.01`, `P1.02`
+  and `P1.07` stay spare. They are ordinary plated through-holes, the same size as the
+  header ones — they just sit inboard of the two edge rows instead of on them, so
+  solder them exactly like any other pin if you do use them. The small square SWD/SWC
+  contacts beside them *are* surface pads, for programming; leave them.
 - **EC12 leg order varies by part.** Confirm the shared common with a continuity
   beep before soldering.
 - **Thick battery wire will not fit `B+`/`B−`.** Those two holes are smaller than

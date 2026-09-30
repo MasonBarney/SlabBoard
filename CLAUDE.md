@@ -56,9 +56,10 @@ fix when split halves will not pair.
 
 ### Not yet wired up
 
-- **EC12 push switch** (`P1.02`). The 5×6 grid is full, so the switch cannot
-  live in the matrix; it needs a `zmk,kscan-gpio-direct` plus `kscan-composite`
-  and a 61st keymap position.
+- **EC12 push switch.** Revision 1 documents it on the `P1.02` inner hole,
+  revision 2 (`docs/`) on `P0.08`. Either way the 5×6 grid is full, so the switch
+  cannot live in the matrix; it needs a `zmk,kscan-gpio-direct` plus
+  `kscan-composite` and a 61st keymap position.
 
 ## Other shields here
 
@@ -137,13 +138,22 @@ layout selection back the other way. Layer state never crosses it — verified b
 reading `app/src/split/` at the pinned revision. So the display must sit on the
 central half, which is the left.
 
-Revision 2 display pins (left half): SCK `P0.10`, MOSI `P0.06`, CS `P0.08` — all
-edge-header pins, so no inner through-hole is needed, unlike revision 1 which put
-MOSI on `P1.01`. This commits the left half's last three free header pins: 18 of 18.
+`docs/` also moves the **EC12 push switch** from the `P1.02` inner hole to `P0.08`
+on the right half's edge header. `P0.08` is three positions above `P0.17` in the same
+column, so SW, both GND legs and A/B form one contiguous run.
 
-Knock-on opportunity, not yet taken: with the display off the right half, `P1.11`
-and `P0.10` free up there, so the EC12 switch could move off the `P1.02` inner hole
-onto a header pin.
+Revision 2 pin budget:
+
+- **Left half, 18 of 18 used.** Display on SCK `P0.10`, MOSI `P0.06`, CS `P0.08` —
+  the half's last three free header pins. Only `P1.01`, `P1.02`, `P1.07` left.
+- **Right half, 14 of 18 used.** 11 matrix + encoder A `P0.17`, B `P0.20`, SW `P0.08`.
+  Spare: `P1.13`, `P1.11`, `P0.10`, `P0.06`.
+
+**Correction on the record:** revision 1's use of the inner holes was avoidable, not
+forced. Earlier notes claimed the right half's header was full — it was not. With the
+matrix and encoder A/B wired it used 15 of 18, leaving `P1.13`, `P0.06` and `P0.08`
+free, so MOSI never needed `P1.01` and the switch never needed `P1.02`. Do not repeat
+the "header was full" reasoning.
 
 ## Open questions
 

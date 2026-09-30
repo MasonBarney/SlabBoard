@@ -122,6 +122,29 @@ is COL 1 and `P0.10` is the display clock, so both halves depend on it.
 - [nice!nano Wiring Reference](https://claude.ai/code/artifact/4d036039-86e7-446b-abcc-93ed0737649a)
   — hand-wiring pinouts, bottom view. **The `slabboard` shield matches this.**
 
+## Revision 1 vs revision 2 — docs and config deliberately disagree
+
+`docs/` describes **revision 2**, which moves the nice!view from the right half to
+the **left**. `config/` still builds **revision 1**, with the display on the right.
+This divergence is intentional: the prototype is built and working as revision 1,
+and revision 2 is the planned rebuild. **Do not "fix" the mismatch by syncing one
+to the other** without being asked.
+
+Why the display has to move: a split peripheral cannot show a layer indicator.
+ZMK's split link carries key-position, sensor, input and battery events from
+peripheral to central, and only `INVOKE_BEHAVIOR` plus HID indicators and physical
+layout selection back the other way. Layer state never crosses it — verified by
+reading `app/src/split/` at the pinned revision. So the display must sit on the
+central half, which is the left.
+
+Revision 2 display pins (left half): SCK `P0.10`, MOSI `P0.06`, CS `P0.08` — all
+edge-header pins, so no inner through-hole is needed, unlike revision 1 which put
+MOSI on `P1.01`. This commits the left half's last three free header pins: 18 of 18.
+
+Knock-on opportunity, not yet taken: with the display off the right half, `P1.11`
+and `P0.10` free up there, so the EC12 switch could move off the `P1.02` inner hole
+onto a header pin.
+
 ## Open questions
 
 - The firmware has never been built or flashed. Nothing here is hardware-verified.

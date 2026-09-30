@@ -1,5 +1,18 @@
 # SlabBoard wiring reference
 
+> ### ⚠ Revision 2 — differs from the built prototype
+>
+> **The nice!view has moved from the right half to the left.** A split peripheral
+> cannot show a layer indicator: ZMK's split link carries key-position, sensor,
+> input and battery events from peripheral to central, and only behaviour
+> invocation and HID indicators back the other way. Layer state never crosses it,
+> so the display has to live on the central half — which is the left.
+>
+> **The firmware in this repository still builds the display on the right (revision 1).**
+> Do not wire the prototype from this page. `config/` and `docs/` deliberately
+> disagree until revision 2 is built.
+
+
 For the key layout rather than the wiring, see [`keymap.md`](keymap.md).
 
 Hand-wiring pinouts for the two nice!nano v2 halves. Pins are named as they are
@@ -68,15 +81,22 @@ outer (pinky) column on each. Keymap columns run left to right across the whole
 board, so the outer pinky is COL 0 on the left and COL 11 on the right. Confirmed by
 flashing both halves.
 
-### nice!view display — right half
+### nice!view display — left half *(revision 2)*
 
 | Pad | Silkscreen |
 |---|---|
 | VCC | VCC |
 | GND | GND |
 | SCK | `P0.10` |
-| MOSI | `P1.01` — inner through-hole |
-| CS | `P1.11` |
+| MOSI | `P0.06` |
+| CS | `P0.08` |
+
+All three signals land on edge-header pins here, so revision 2 needs no inner
+through-hole for the display — an improvement on revision 1, which put MOSI on
+`P1.01` because the right half's header was full.
+
+This fills the left half's last three free header pins. After this it is fully
+committed: 18 of 18, with only the `P1.01`, `P1.02` and `P1.07` pads spare.
 
 The nice!view is a Sharp memory-in-pixel LCD (`sharp,ls0xx`). It takes
 chip-select, clock and data only — **there is no D/C line to wire.**
@@ -139,8 +159,10 @@ sits at I²C address `0x74` on `i2c0`. No reset line is wired — the driver tre
 - **`P0.09` and `P0.10` are the nRF52840's NFC pins.** They only work as GPIO with
   `CONFIG_NFCT_PINS_AS_GPIO=y`, which ZMK's nice!nano board definition sets.
   `P0.09` is COL 1 and `P0.10` is the display clock, so both halves depend on it.
-- **Two signals land on the inner holes** (`P1.01`, `P1.02`) because the 18-pin
-  edge header is fully committed. `P1.01`, `P1.02` and `P1.07` are ordinary plated
+- **One signal lands on an inner hole** (`P1.02`, the encoder switch) because the
+  right half's edge header was full in revision 1. With the display moved off that
+  half, `P1.11` and `P0.10` free up, so revision 2 can put the switch on a header
+  pin instead. `P1.01`, `P1.02` and `P1.07` are ordinary plated
   through-holes, the same size as the header ones — they just sit inboard of the two
   edge rows instead of on them, so solder them exactly like any other pin. The small
   square SWD/SWC contacts beside them *are* surface pads, for programming; leave them.

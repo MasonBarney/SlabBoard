@@ -98,19 +98,19 @@
     <text x="292" y="425" text-anchor="end" class="alias">SCK · pro_micro 15</text>
   </g>
   <g>
-    <line x1="380" y1="456" x2="300" y2="456" class="leader spi"/>
+    <line x1="380" y1="456" x2="300" y2="456" class="leader spare"/>
     <circle cx="380" cy="456" r="3.5" class="pad"/>
-    <circle cx="300" cy="456" r="4" class="dot spi"/>
-    <text x="372" y="451" text-anchor="end" class="silk spi">P1.11</text>
-    <text x="292" y="455" text-anchor="end" class="assign spi">nice!view CS</text>
+    <circle cx="300" cy="456" r="4" class="dot spare"/>
+    <text x="372" y="451" text-anchor="end" class="silk spare">P1.11</text>
+    <text x="292" y="455" text-anchor="end" class="assign spare">spare</text>
     <text x="292" y="467" text-anchor="end" class="alias">MISO · pro_micro 14</text>
   </g>
   <g>
-    <line x1="380" y1="498" x2="300" y2="498" class="leader spi"/>
+    <line x1="380" y1="498" x2="300" y2="498" class="leader spare"/>
     <circle cx="380" cy="498" r="3.5" class="pad"/>
-    <circle cx="300" cy="498" r="4" class="dot spi"/>
-    <text x="372" y="493" text-anchor="end" class="silk spi">P0.10</text>
-    <text x="292" y="497" text-anchor="end" class="assign spi">nice!view SCK</text>
+    <circle cx="300" cy="498" r="4" class="dot spare"/>
+    <text x="372" y="493" text-anchor="end" class="silk spare">P0.10</text>
+    <text x="292" y="497" text-anchor="end" class="assign spare">spare</text>
     <text x="292" y="509" text-anchor="end" class="alias">MOSI · pro_micro 16</text>
   </g>
   <g>

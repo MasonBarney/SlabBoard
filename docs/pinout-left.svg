@@ -106,11 +106,11 @@
     <text x="292" y="467" text-anchor="end" class="alias">MISO · pro_micro 14</text>
   </g>
   <g>
-    <line x1="380" y1="498" x2="300" y2="498" class="leader spare"/>
+    <line x1="380" y1="498" x2="300" y2="498" class="leader spi"/>
     <circle cx="380" cy="498" r="3.5" class="pad"/>
-    <circle cx="300" cy="498" r="4" class="dot spare"/>
-    <text x="372" y="493" text-anchor="end" class="silk spare">P0.10</text>
-    <text x="292" y="497" text-anchor="end" class="assign spare">spare</text>
+    <circle cx="300" cy="498" r="4" class="dot spi"/>
+    <text x="372" y="493" text-anchor="end" class="silk spi">P0.10</text>
+    <text x="292" y="497" text-anchor="end" class="assign spi">nice!view SCK</text>
     <text x="292" y="509" text-anchor="end" class="alias">MOSI · pro_micro 16</text>
   </g>
   <g>
@@ -122,19 +122,19 @@
     <text x="292" y="551" text-anchor="end" class="alias">pro_micro 10</text>
   </g>
   <g>
-    <line x1="520" y1="78" x2="600" y2="78" class="leader spare"/>
+    <line x1="520" y1="78" x2="600" y2="78" class="leader spi"/>
     <circle cx="520" cy="78" r="3.5" class="pad"/>
-    <circle cx="600" cy="78" r="4" class="dot spare"/>
-    <text x="528" y="73" text-anchor="start" class="silk spare">P0.06</text>
-    <text x="608" y="77" text-anchor="start" class="assign spare">spare</text>
+    <circle cx="600" cy="78" r="4" class="dot spi"/>
+    <text x="528" y="73" text-anchor="start" class="silk spi">P0.06</text>
+    <text x="608" y="77" text-anchor="start" class="assign spi">nice!view MOSI</text>
     <text x="608" y="89" text-anchor="start" class="alias">TXO · pro_micro 1</text>
   </g>
   <g>
-    <line x1="520" y1="120" x2="600" y2="120" class="leader spare"/>
+    <line x1="520" y1="120" x2="600" y2="120" class="leader spi"/>
     <circle cx="520" cy="120" r="3.5" class="pad"/>
-    <circle cx="600" cy="120" r="4" class="dot spare"/>
-    <text x="528" y="115" text-anchor="start" class="silk spare">P0.08</text>
-    <text x="608" y="119" text-anchor="start" class="assign spare">spare</text>
+    <circle cx="600" cy="120" r="4" class="dot spi"/>
+    <text x="528" y="115" text-anchor="start" class="silk spi">P0.08</text>
+    <text x="608" y="119" text-anchor="start" class="assign spi">nice!view CS</text>
     <text x="608" y="131" text-anchor="start" class="alias">RXI · pro_micro 0</text>
   </g>
   <g>

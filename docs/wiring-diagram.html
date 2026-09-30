@@ -165,9 +165,10 @@
     <dl class="specs">
       <div><dt>MCU</dt><dd>nice!nano v2 &times; 2</dd></div>
       <div><dt>Matrix</dt><dd>5 rows &times; 6 cols, per half</dd></div>
-      <div><dt>Left half adds</dt><dd>Azoteq TPS65 trackpad (I&sup2;C)</dd></div>
-      <div><dt>Right half adds</dt><dd>EC12 encoder + nice!view (SPI)</dd></div>
+      <div><dt>Left half adds</dt><dd>TPS65 trackpad (I&sup2;C) + nice!view (SPI)</dd></div>
+      <div><dt>Right half adds</dt><dd>EC12 rotary encoder</dd></div>
     </dl>
+    <div class="reflink" style="border-left-color:var(--row)"><b>Revision 2</b><span>The nice!view has moved from the right half to the <b>left</b>. A split peripheral cannot show a layer indicator &mdash; ZMK's split link never carries layer state &mdash; so the display must sit on the central half. <b>The firmware still builds revision 1, with the display on the right.</b> Do not wire the prototype from this page.</span></div>
     <div class="reflink">
       <b>Cross-check</b>
       <span>Official nice!nano v2 pinout from nicekeyboards:
@@ -374,11 +375,11 @@
     <text x="292" y="467" text-anchor="end" class="alias">MISO · pro_micro 14</text>
   </g>
   <g>
-    <line x1="380" y1="498" x2="300" y2="498" class="leader spare"/>
+    <line x1="380" y1="498" x2="300" y2="498" class="leader spi"/>
     <circle cx="380" cy="498" r="3.5" class="pad"/>
-    <circle cx="300" cy="498" r="4" class="dot spare"/>
-    <text x="372" y="493" text-anchor="end" class="silk spare">P0.10</text>
-    <text x="292" y="497" text-anchor="end" class="assign spare">spare</text>
+    <circle cx="300" cy="498" r="4" class="dot spi"/>
+    <text x="372" y="493" text-anchor="end" class="silk spi">P0.10</text>
+    <text x="292" y="497" text-anchor="end" class="assign spi">nice!view SCK</text>
     <text x="292" y="509" text-anchor="end" class="alias">MOSI · pro_micro 16</text>
   </g>
   <g>
@@ -390,19 +391,19 @@
     <text x="292" y="551" text-anchor="end" class="alias">pro_micro 10</text>
   </g>
   <g>
-    <line x1="520" y1="78" x2="600" y2="78" class="leader spare"/>
+    <line x1="520" y1="78" x2="600" y2="78" class="leader spi"/>
     <circle cx="520" cy="78" r="3.5" class="pad"/>
-    <circle cx="600" cy="78" r="4" class="dot spare"/>
-    <text x="528" y="73" text-anchor="start" class="silk spare">P0.06</text>
-    <text x="608" y="77" text-anchor="start" class="assign spare">spare</text>
+    <circle cx="600" cy="78" r="4" class="dot spi"/>
+    <text x="528" y="73" text-anchor="start" class="silk spi">P0.06</text>
+    <text x="608" y="77" text-anchor="start" class="assign spi">nice!view MOSI</text>
     <text x="608" y="89" text-anchor="start" class="alias">TXO · pro_micro 1</text>
   </g>
   <g>
-    <line x1="520" y1="120" x2="600" y2="120" class="leader spare"/>
+    <line x1="520" y1="120" x2="600" y2="120" class="leader spi"/>
     <circle cx="520" cy="120" r="3.5" class="pad"/>
-    <circle cx="600" cy="120" r="4" class="dot spare"/>
-    <text x="528" y="115" text-anchor="start" class="silk spare">P0.08</text>
-    <text x="608" y="119" text-anchor="start" class="assign spare">spare</text>
+    <circle cx="600" cy="120" r="4" class="dot spi"/>
+    <text x="528" y="115" text-anchor="start" class="silk spi">P0.08</text>
+    <text x="608" y="119" text-anchor="start" class="assign spi">nice!view CS</text>
     <text x="608" y="131" text-anchor="start" class="alias">RXI · pro_micro 0</text>
   </g>
   <g>
@@ -607,19 +608,19 @@
     <text x="292" y="425" text-anchor="end" class="alias">SCK · pro_micro 15</text>
   </g>
   <g>
-    <line x1="380" y1="456" x2="300" y2="456" class="leader spi"/>
+    <line x1="380" y1="456" x2="300" y2="456" class="leader spare"/>
     <circle cx="380" cy="456" r="3.5" class="pad"/>
-    <circle cx="300" cy="456" r="4" class="dot spi"/>
-    <text x="372" y="451" text-anchor="end" class="silk spi">P1.11</text>
-    <text x="292" y="455" text-anchor="end" class="assign spi">nice!view CS</text>
+    <circle cx="300" cy="456" r="4" class="dot spare"/>
+    <text x="372" y="451" text-anchor="end" class="silk spare">P1.11</text>
+    <text x="292" y="455" text-anchor="end" class="assign spare">spare</text>
     <text x="292" y="467" text-anchor="end" class="alias">MISO · pro_micro 14</text>
   </g>
   <g>
-    <line x1="380" y1="498" x2="300" y2="498" class="leader spi"/>
+    <line x1="380" y1="498" x2="300" y2="498" class="leader spare"/>
     <circle cx="380" cy="498" r="3.5" class="pad"/>
-    <circle cx="300" cy="498" r="4" class="dot spi"/>
-    <text x="372" y="493" text-anchor="end" class="silk spi">P0.10</text>
-    <text x="292" y="497" text-anchor="end" class="assign spi">nice!view SCK</text>
+    <circle cx="300" cy="498" r="4" class="dot spare"/>
+    <text x="372" y="493" text-anchor="end" class="silk spare">P0.10</text>
+    <text x="292" y="497" text-anchor="end" class="assign spare">spare</text>
     <text x="292" y="509" text-anchor="end" class="alias">MOSI · pro_micro 16</text>
   </g>
   <g>
@@ -756,16 +757,7 @@
         </tbody>
       </table>
       <table>
-        <caption>nice!view display (SPI) — right half</caption>
-        <thead><tr><th>nice!view pad</th><th>Silkscreen</th></tr></thead>
-        <tbody>
-          <tr><td>VCC</td><td class="pin">VCC</td></tr>
-          <tr><td>GND</td><td class="pin">GND</td></tr>
-          <tr><td>SCK</td><td class="pin">P0.10</td></tr>
-          <tr><td>MOSI</td><td class="pin">P1.01 &mdash; inner hole</td></tr>
-          <tr><td>CS</td><td class="pin">P1.11</td></tr>
-        </tbody>
-      </table>
+        <caption>nice!view display (SPI) — left half (revision 2)</caption><thead><tr><th>nice!view pad</th><th>Silkscreen</th></tr></thead><tbody><tr><td>VCC</td><td class="pin">VCC</td></tr><tr><td>GND</td><td class="pin">GND</td></tr><tr><td>SCK</td><td class="pin">P0.10</td></tr><tr><td>MOSI</td><td class="pin">P0.06</td></tr><tr><td>CS</td><td class="pin">P0.08</td></tr></tbody></table>
       <table>
         <caption>Inner through-holes</caption>
         <thead><tr><th>Hole</th><th>Use</th></tr></thead>

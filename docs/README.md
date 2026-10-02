@@ -17,7 +17,9 @@
 > this page. `config/` and `docs/` deliberately disagree until revision 2 is built.
 
 
-For the key layout rather than the wiring, see [`keymap.md`](keymap.md).
+For the key layout rather than the wiring, see [`keymap.md`](keymap.md). For an
+input device evaluated and **deferred** to a future build, see
+[`future-ano-build.md`](future-ano-build.md) — it describes no part of this keyboard.
 
 Hand-wiring pinouts for the two nice!nano v2 halves. Pins are named as they are
 silkscreened on the board — raw nRF52840 port names (`P0.22`, `P1.15`), not Pro

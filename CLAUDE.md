@@ -120,8 +120,19 @@ is COL 1 and `P0.10` is the display clock, so both halves depend on it.
 
 ## Published artifacts
 
-- [nice!nano Wiring Reference](https://claude.ai/code/artifact/4d036039-86e7-446b-abcc-93ed0737649a)
-  — hand-wiring pinouts, bottom view. **The `slabboard` shield matches this.**
+- [nice!nano Wiring Reference](https://claude.ai/artifact/AWaMrprTjqrM6naaVTb96h)
+  — hand-wiring pinouts, bottom view. Mirrors `docs/wiring-diagram.html`, so it
+  shows **revision 2**; the `slabboard` shield in `config/` is revision 1.
+  (An older short link, `claude.ai/code/artifact/4d036039-…`, points at the same
+  artifact but is superseded.)
+
+## Parked designs
+
+`docs/future-ano-build.md` holds a worked-out but **unbuilt** design for putting an
+Adafruit ANO navigation wheel on a future revision: pin map, `kscan-composite` plan,
+and the encoder maths. It describes no part of this keyboard — do not reconcile
+`config/` or the wiring diagram against it. It also carries a short comparison of the
+other encoders evaluated (DFRobot SEN0235, Bourns PEC11R, CTS 288, SparkFun BOB-11722).
 
 ## Revision 1 vs revision 2 — docs and config deliberately disagree
 
@@ -155,9 +166,42 @@ matrix and encoder A/B wired it used 15 of 18, leaving `P1.13`, `P0.06` and `P0.
 free, so MOSI never needed `P1.01` and the switch never needed `P1.02`. Do not repeat
 the "header was full" reasoning.
 
+## Known bug: the encoder over-triggers 4×
+
+`slabboard.dtsi` has `steps = <30>` and `triggers-per-rotation = <30>`. That fires the
+bound behaviour **four times per physical detent**, whatever encoder is fitted.
+
+`steps` is **quadrature transitions per revolution — 4 × the detent count**, not the
+datasheet's "pulses per revolution." ZMK's config reference calls it *"Number of
+encoder pulses per complete rotation,"* which is misleading and has produced wrong
+answers more than once.
+
+Derivation from ZMK source, at a revision near the pinned one:
+
+- `app/module/drivers/sensor/ec11/ec11.c` — `val->val1 = (pulses * FULL_ROTATION) / drv_cfg->steps;`
+  where the quadrature decoder returns `delta = ±1` per **state transition**, and one
+  detent is a full cycle of **4** transitions.
+- `app/src/behaviors/behavior_sensor_rotate_common.c` — `int trigger_degrees = 360 / sensor_config->triggers_per_rotation;`
+
+So degrees per detent = `(4 × 360) / steps`, and one trigger per detent requires
+`steps = 4 × triggers_per_rotation = 4 × detents`. Corroborated by ZMK's in-tree Kyria
+shield: `steps = <80>` with `triggers-per-rotation = <20>`.
+
+Correct values by part:
+
+| Encoder | `steps` | `triggers-per-rotation` |
+|---|---|---|
+| 20-detent (DFRobot SEN0235, most EC11) | `80` | `20` |
+| 24-detent (Bourns PEC11R, Adafruit ANO) | `96` | `24` |
+
+This is separate from, and was masked by, a shorted B channel (`P0.20` stuck low) on
+the prototype's first encoder.
+
 ## Open questions
 
-- The firmware has never been built or flashed. Nothing here is hardware-verified.
+- Hardware-verified so far: all 60 matrix keys, the TPS65 trackpad (including axis
+  orientation), split pairing, and the nice!view on the right half as revision 1
+  wires it. The encoder has never worked correctly — see the `steps` bug below.
 - Two other Azoteq drivers were considered: `beekeeb/zmk_driver_azoteq`
   (`azoteq,tps43`, more features including power management, more recently
   maintained, but its defaults are TPS43-tuned) and

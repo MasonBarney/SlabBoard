@@ -206,18 +206,29 @@ first and the inverts are tested against the **post-swap** code — so if a swap
 added here, pick the invert for the axis the event ends up on, not the one it started
 on. With no swap, `X_INVERT` just negates `INPUT_REL_X`.
 
-**The transform value is mounting-dependent and the pad has moved twice.** It is not
-a property of the driver or the chip -- it only cancels however the pad is physically
-oriented:
+### The orientation is not stable across boots -- do not chase it
 
-| pad feeds ZMK | needed transform | |
-|---|---|---|
-| `[[-1, 0], [0, 1]]` | `X_INVERT` | worked `645c3b8` |
-| `[[ 0, 1], [-1, 0]]` | `XY_SWAP \| X_INVERT` | current |
+**Measured 2026-10-13: 9 power cycles, 8 correct and 1 wrong.** The pad is siliconed
+down and has never moved. The orientation differs *between boots of identical
+firmware*, so any single observation of "the axes are wrong" may be a bad boot rather
+than a persistent state.
 
-Those differ by a 90 degree rotation, with no config change in between -- the pad is
-moving in its mount. **Fix the mounting**; re-deriving the transform each time only
-treats the symptom.
+**Before changing any transform, power-cycle 5-10 times and count.** A one-off
+observation is not a measurement here. Earlier entries in this file and several
+commits in the history treated single observations as ground truth; at least one
+"fix" was derived from what was probably a single bad boot.
+
+Suspected cause, in `AYM1607/zmk-driver-azoteq-iqs5xx` at the pinned `27321f0`:
+`iqs5xx_init()` resets the chip, waits a blind `k_msleep(100)`, then calls
+`iqs5xx_setup_device()` to write config. The IQS5xx only accepts I2C inside a
+communication window it signals on RDY. The driver *ends* comm windows
+(`iqs5xx_end_comm_window`) but never waits to *enter* one -- RDY is only wired up as a
+runtime interrupt. So whether each config write lands depends on where that blind
+100 ms falls in the chip's RDY cycle.
+
+That also better explains the earlier "the flags don't mean what they're documented to
+mean" conclusion: the bits probably mean exactly what Azoteq says, they just do not
+always arrive. Treat that section below with suspicion.
 
 If it goes wrong again: take a fresh four-direction measurement and solve for the
 transform, rather than permuting flags. And mind the ordering trap -- in

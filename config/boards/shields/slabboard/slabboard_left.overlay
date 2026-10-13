@@ -113,6 +113,30 @@
     };
 };
 
+/*
+ * Mouse layer auto-activation.
+ *
+ * zip_temp_layer below raises keymap layer 4 (Mouse) whenever the trackpad
+ * reports movement and drops it again after 2 s of no events, so the left-hand
+ * home row is already mouse buttons by the time a finger lands on the pad.
+ * The TPS65's own click-and-drag gesture is unreliable, which is the point of
+ * the layer.
+ *
+ * Two properties matter, and both are set on the pre-defined instance:
+ *
+ *  - excluded-positions lists the five button keys (A S D F G = 25..29).
+ *    Any key press normally drops the layer; without this, pressing a mouse
+ *    button would cancel the very layer it lives on.
+ *  - require-prior-idle-ms stops the layer arming mid-sentence: brushing the
+ *    pad while typing will not silently turn the home row into mouse buttons.
+ *
+ * Layer 4 is also bound to &mo 4 on the right thumb for deliberate use.
+ */
+&zip_temp_layer {
+    require-prior-idle-ms = <200>;
+    excluded-positions = <25 26 27 28 29>;
+};
+
 / {
     trackpad_listener: trackpad_listener {
         compatible = "zmk,input-listener";
@@ -130,6 +154,9 @@
          * change the result.
          * See https://zmk.dev/docs/keymaps/input-processors
          */
-        input-processors = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>;
+        input-processors
+            = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>
+            , <&zip_temp_layer 4 2000>
+            ;
     };
 };

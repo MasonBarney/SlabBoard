@@ -18,3 +18,26 @@ include:
 
   - board: nice_nano//zmk
     shield: settings_reset
+
+  # Debug-only left half, for diagnosing the trackpad's boot-unstable axis
+  # orientation (9 power cycles: 8 correct, 1 wrong -- see CLAUDE.md).
+  #
+  # The suspicion is that iqs5xx_init() writes config registers after a blind
+  # 100 ms wait rather than waiting for the chip's RDY communication window, so
+  # some writes do not land. The driver LOG_ERRs on every failed config write,
+  # so a bad boot should say so directly.
+  #
+  # Logging goes to a USB CDC ACM device. The startup delay holds the log
+  # processing thread for 8 s so boot-time messages are still buffered when you
+  # attach a terminal -- without it, init is over before you can connect.
+  #
+  # NOT for daily use: logging costs battery, and this build drops the
+  # studio-rpc-usb-uart snippet because only one snippet per entry is supported
+  # (the workflow passes the value as a single -S argument).
+  #
+  # Artifact: nice_nano_zmk-slabboard_left-debug-zmk
+  - board: nice_nano//zmk
+    shield: slabboard_left
+    snippet: zmk-usb-logging
+    cmake-args: -DCONFIG_LOG_PROCESS_THREAD_STARTUP_DELAY_MS=8000 -DCONFIG_INPUT_LOG_LEVEL_DBG=y
+    nickname: debug

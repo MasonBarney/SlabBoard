@@ -80,13 +80,34 @@
          */
 
         /*
-         * X is inverted relative to how the pad is mounted -- verified on
-         * hardware: moving a finger left moved the pointer right, while Y was
-         * already correct. flip-x sets IQS5XX_FLIP_X in the chip's own XY
-         * config register, so the pad reports corrected coordinates rather
-         * than the driver negating them afterwards.
+         * Axis orientation. All three bits go into the IQS5xx's own
+         * XY_CONFIG_0 register (0x0669) -- the chip transforms the
+         * coordinates, the driver does not post-process them. See
+         * drivers/input/iqs5xx.c in the pinned module.
+         *
+         * The pad is mounted rotated: with flip-x alone it behaved as a 90
+         * degree counter-clockwise rotation (finger up moved the pointer
+         * left, finger right moved it up). Writing that as a matrix on
+         * (x right, y down):
+         *
+         *     observed  = [[0, 1], [-1, 0]]
+         *     flip-x    = [[-1, 0], [0, 1]]
+         *     mounting  = flip-x^-1 . observed = [[0, -1], [-1, 0]]
+         *
+         * That mounting matrix is its own inverse, so the correction is the
+         * same transform: swap the axes and negate both, which is exactly
+         * switch-xy + flip-x + flip-y.
+         *
+         * Note this combination is immune to the one thing Azoteq's binding
+         * does not document -- whether the chip applies the flips before or
+         * after the swap. With BOTH flips set the two orders give the same
+         * matrix ([[0,-1],[-1,0]]), because negating both axes commutes with
+         * the swap. Any setting with only one flip would depend on that
+         * order; this one does not.
          */
+        switch-xy;
         flip-x;
+        flip-y;
 
         one-finger-tap;
         two-finger-tap;

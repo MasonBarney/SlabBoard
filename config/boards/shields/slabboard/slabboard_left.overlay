@@ -6,6 +6,10 @@
 
 #include "slabboard.dtsi"
 
+/* For &zip_xy_transform and INPUT_TRANSFORM_* -- see the trackpad listener. */
+#include <input/processors.dtsi>
+#include <dt-bindings/zmk/input_transform.h>
+
 &kscan0 {
     /*
      * COL 0 (outer pinky) -> COL 5 (inner index).
@@ -80,34 +84,26 @@
          */
 
         /*
-         * Axis orientation. All three bits go into the IQS5xx's own
-         * XY_CONFIG_0 register (0x0669) -- the chip transforms the
-         * coordinates, the driver does not post-process them. See
-         * drivers/input/iqs5xx.c in the pinned module.
+         * No axis flags here on purpose. The IQS5xx's own XY_CONFIG_0 bits do
+         * NOT behave as the driver's header claims on this part, measured over
+         * three builds (finger direction -> pointer direction):
          *
-         * The pad is mounted rotated: with flip-x alone it behaved as a 90
-         * degree counter-clockwise rotation (finger up moved the pointer
-         * left, finger right moved it up). Writing that as a matrix on
-         * (x right, y down):
+         *   written 0x00 (no flags)  up->up  down->down  left->right right->left
+         *   written 0x01 (flip-x)    up->left down->right left->down right->up
+         *   written 0x07 (all three) up->right down->left left->down right->up
          *
-         *     observed  = [[0, 1], [-1, 0]]
-         *     flip-x    = [[-1, 0], [0, 1]]
-         *     mounting  = flip-x^-1 . observed = [[0, -1], [-1, 0]]
+         * Taking 0x00 as the untransformed mounting, 0x01 acts as an X/Y SWAP
+         * and 0x07 as swap+flipY -- neither is what azoteq,iqs5xx-common.yaml
+         * documents, and no ordering of flip-then-swap reproduces it. The
+         * driver writes the bits to XY_CONFIG_0 (0x0669) and reads back the
+         * RELATIVE registers REL_X/REL_Y (0x0012/0x0014); the chip evidently
+         * does not apply that register to the relative path the way the
+         * absolute one is documented.
          *
-         * That mounting matrix is its own inverse, so the correction is the
-         * same transform: swap the axes and negate both, which is exactly
-         * switch-xy + flip-x + flip-y.
-         *
-         * Note this combination is immune to the one thing Azoteq's binding
-         * does not document -- whether the chip applies the flips before or
-         * after the swap. With BOTH flips set the two orders give the same
-         * matrix ([[0,-1],[-1,0]]), because negating both axes commutes with
-         * the swap. Any setting with only one flip would depend on that
-         * order; this one does not.
+         * So leave the chip untouched -- 0x00 is the one state whose behaviour
+         * is actually known -- and correct the axis in ZMK instead, on the
+         * trackpad listener below. The mounting needs exactly an X inversion.
          */
-        switch-xy;
-        flip-x;
-        flip-y;
 
         one-finger-tap;
         two-finger-tap;
@@ -123,12 +119,17 @@
         device = <&trackpad>;
 
         /*
-         * Axis direction is handled on the trackpad node above (flip-x), not
-         * here -- the driver's switch-xy / flip-x / flip-y are applied inside
-         * the IQS5xx itself. Input processors remain available for anything
-         * the driver cannot express.
+         * Axis correction lives here, not on the trackpad node -- see the long
+         * comment there for why the chip's own flags are unusable.
+         *
+         * The pad reports left/right inverted and up/down correct, so a single
+         * X inversion squares it up. zip_xy_transform works on INPUT_EV_REL
+         * with x-codes = INPUT_REL_X, and X_INVERT simply negates the value of
+         * matching events (app/src/pointing/input_processor_transform.c), so
+         * this is unambiguous -- there is no swap in play whose ordering could
+         * change the result.
          * See https://zmk.dev/docs/keymaps/input-processors
          */
-        // input-processors = <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)>;
+        input-processors = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>;
     };
 };

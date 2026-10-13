@@ -133,7 +133,11 @@ is COL 1 and `P0.10` is the display clock, so both halves depend on it.
 Adafruit ANO navigation wheel on a future revision: pin map, `kscan-composite` plan,
 and the encoder maths. It describes no part of this keyboard — do not reconcile
 `config/` or the wiring diagram against it. It also carries a short comparison of the
-other encoders evaluated (DFRobot SEN0235, Bourns PEC11R, CTS 288, SparkFun BOB-11722).
+other encoders evaluated (DFRobot SEN0235, Bourns PEC11R, CTS 288, SparkFun BOB-11722),
+and a trackpad section on the Azoteq IQS9150: it is a different chip generation from
+the IQS5xx (different address space, opposite endianness), so `azoteq,iqs5xx` cannot
+drive it, but `Rino1122/zmk-driver-azoteq-iqs915x` can — with the caveat that it
+ships a sensor-specific init blob tuned to the PXM0091 module.
 
 ## Revision 1 vs revision 2 — docs and config deliberately disagree
 

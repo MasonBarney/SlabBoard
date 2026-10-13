@@ -1,6 +1,8 @@
 # Parked: ANO navigation wheel on a future build
 
 Research notes for a **future** SlabBoard revision, kept so the work isn't lost.
+The ANO wheel is the main subject; the trailing sections carry other next-build
+research (trackpad controllers, encoders) that has no home in the current build.
 
 > **Nothing here applies to the current board.** The built prototype (revision 1)
 > and the revision-2 wiring diagram both use a single rotary encoder. The ANO was
@@ -230,6 +232,90 @@ since bolting the board down is what keeps wire tension off the joints.
 
 Combined with the 18-of-18 pin consumption and the 65-position keymap rework, this is
 a new keyboard rather than a revision — hence parking it.
+
+---
+
+## Trackpad: the IQS9150 is a different chip, not a variant
+
+Looked at [Azoteq IQS9150EV02-S](https://www.mouser.com/en/ProductDetail/Azoteq/IQS9150EV02-S)
+as a trackpad upgrade. **The driver this board uses cannot drive it.**
+
+### Why `azoteq,iqs5xx` will not work
+
+Read from the two drivers' own register headers:
+
+| | IQS5xx (`AYM1607`, in use) | IQS9150 (`Rino1122`) |
+|---|---|---|
+| I²C address | `0x74` | `0x56` |
+| REL_X / REL_Y | `0x0012` / `0x0014` | `0x1014` / `0x1016` |
+| Finger 1 abs X/Y | `0x0016` / `0x0018` | `0x1024` / `0x1026` |
+| Byte order | big-endian | **little-endian** |
+
+Different generation, different address space, opposite endianness. Our driver
+would not even find the chip. This is a replacement, not a port.
+
+### There is a driver: `Rino1122/zmk-driver-azoteq-iqs915x`
+
+<https://github.com/Rino1122/zmk-driver-azoteq-iqs915x> — 206 commits, August 2025
+to October 2026, actively worked on. Inspected at `cfcdbfd`.
+
+- `compatible = "azoteq,iqs915x"`, `reg = <0x56>`
+- `rdy-gpios` **required**, `reset-gpios` optional
+- Taps, two-finger tap, tap-and-hold, scroll with **inertia**, pointer
+  acceleration, 3/4-finger swipe gestures, coordinate calibration
+- Swapping it in is a `config/west.yml` change plus a rewritten trackpad node
+
+**Axis orientation has no devicetree properties here.** The flags are compile-time
+`#define`s in `drivers/input/iqs915x_sensor_config.h`:
+
+```c
+#define IQS915X_SENSOR_FLIP_X   false
+#define IQS915X_SENSOR_FLIP_Y   false
+#define IQS915X_SENSOR_SWITCH_XY false
+```
+
+So orientation is fixed with ZMK input processors — the same approach this board
+settled on after the IQS5xx chip flags turned out to be unusable. See "Trackpad
+axes" in `CLAUDE.md`; that lesson transfers directly.
+
+### The catch: it is tuned to one specific sensor
+
+The driver targets the **PXM0091** module and ships `drivers/input/IQS9150_init.h`,
+a **1256-line Azoteq GUI export** of per-channel ATI compensation and sensor
+settings, written to the chip at `0x115C` on init. Its coordinate calibration also
+hardcodes a **6 × 4 block** layout (`IQS915X_COORD_X_BLOCKS` / `_Y_BLOCKS`).
+
+That blob is sensor-specific. Point it at a different pad and the init data is
+wrong — auto-ATI may re-tune compensation, but block geometry and resolution will
+not match. Expect to regenerate the init array from Azoteq's GUI for whatever
+sensor is actually used, which means getting the GUI talking to the chip first.
+
+And the PXM0091 is **120 × 75 mm, 2000 × 1213** — a laptop-sized trackpad, far too
+big for a keyboard half.
+
+### Verify before buying
+
+Both unresolved; vendor domains were unreachable from the research session, so
+these come from search results rather than the documents themselves.
+
+1. **What sensor is on the EV02-S, and does it match the 6 × 4 block assumption?**
+   Unknown. If not, the driver's calibration does not hold.
+2. **Can it be wired to a nice!nano at all?** The kit is built for benchtop
+   evaluation — it connects to a PC through a CT210A programmer over ribbon, with
+   Azoteq's GUI. The PXM0091's FPC header is 6-pin: VDD, GND, SDA, SCL, RDY,
+   **MCLR/VPP** — note there is no reset pin, MCLR is the programming line.
+   `reset-gpios` being optional makes that survivable, but it means hand-soldering
+   to an FPC rather than a header.
+
+Read the [IQS9150EV02 user guide](https://www.azoteq.com/images/stories/pdf/iqs9150ev02_user_guide.pdf)
+before committing.
+
+### Verdict
+
+Not for the current build — the TPS65 works and the axes are finally right.
+Worth considering for a rebuild, since inertial scroll and swipe gestures are a
+real upgrade, but budget it as a project: source a correctly sized IQS9150 module
+(not the eval kit), generate an init array for it, then integrate.
 
 ---
 

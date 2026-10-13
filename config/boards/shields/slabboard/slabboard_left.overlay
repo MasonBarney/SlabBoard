@@ -160,16 +160,28 @@
          * Axis correction lives here, not on the trackpad node -- see the long
          * comment there for why the chip's own flags are unusable.
          *
-         * The pad reports left/right inverted and up/down correct, so a single
-         * X inversion squares it up. zip_xy_transform works on INPUT_EV_REL
-         * with x-codes = INPUT_REL_X, and X_INVERT simply negates the value of
-         * matching events (app/src/pointing/input_processor_transform.c), so
-         * this is unambiguous -- there is no swap in play whose ordering could
-         * change the result.
+         * MOUNTING-DEPENDENT. This value is not a property of the driver or
+         * the chip; it only cancels however the pad happens to be physically
+         * oriented, and it has had to change twice with no config change in
+         * between:
+         *
+         *   pad feeds ZMK          needed transform
+         *   [[-1, 0], [0, 1]]      X_INVERT                    (until Oct 2026)
+         *   [[ 0, 1], [-1, 0]]     XY_SWAP | X_INVERT          (current)
+         *
+         * Those two differ by a 90 degree rotation, which means the pad moved
+         * in its mount. If the axes go wrong again, re-derive from a fresh
+         * measurement rather than permuting flags -- and fix the mounting.
+         *
+         * ORDERING TRAP: in app/src/pointing/input_processor_transform.c the
+         * swap rewrites the event CODE first, and the inverts are then tested
+         * against the POST-swap code. So with XY_SWAP set, X_INVERT negates
+         * what started life as the Y value. Naming the axis the event started
+         * on gives the wrong answer.
          * See https://zmk.dev/docs/keymaps/input-processors
          */
         input-processors
-            = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>
+            = <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>
             , <&zip_auto_mouse 4 1100>
             ;
     };

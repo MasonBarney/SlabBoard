@@ -206,9 +206,24 @@ first and the inverts are tested against the **post-swap** code — so if a swap
 added here, pick the invert for the axis the event ends up on, not the one it started
 on. With no swap, `X_INVERT` just negates `INPUT_REL_X`.
 
-Hardware-confirmed working as of `645c3b8`. If the axes go wrong again and `config/`
-has not changed, suspect the pad has physically rotated in its mount rather than
-reaching for the chip flags again.
+**The transform value is mounting-dependent and the pad has moved twice.** It is not
+a property of the driver or the chip -- it only cancels however the pad is physically
+oriented:
+
+| pad feeds ZMK | needed transform | |
+|---|---|---|
+| `[[-1, 0], [0, 1]]` | `X_INVERT` | worked `645c3b8` |
+| `[[ 0, 1], [-1, 0]]` | `XY_SWAP \| X_INVERT` | current |
+
+Those differ by a 90 degree rotation, with no config change in between -- the pad is
+moving in its mount. **Fix the mounting**; re-deriving the transform each time only
+treats the symptom.
+
+If it goes wrong again: take a fresh four-direction measurement and solve for the
+transform, rather than permuting flags. And mind the ordering trap -- in
+`app/src/pointing/input_processor_transform.c` the swap rewrites the event *code*
+first and the inverts are tested against the **post-swap** code, so with `XY_SWAP`
+set, `X_INVERT` negates what started as the Y value.
 
 ## Known bug: the encoder over-triggers 4×
 

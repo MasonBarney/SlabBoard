@@ -35,9 +35,15 @@ include:
   # studio-rpc-usb-uart snippet because only one snippet per entry is supported
   # (the workflow passes the value as a single -S argument).
   #
-  # Artifact: nice_nano_zmk-slabboard_left-debug-zmk
+  # Artifact: slabboard_left_debug.uf2
+  #
+  # artifact-name is REQUIRED here, not cosmetic: this repo calls ZMK's
+  # build-user-config.yml, whose default name is "<shield>-<board>-zmk". Both
+  # slabboard_left entries would otherwise produce the same artifact name and
+  # collide at upload. (ZMK's own build.yml has a `nickname` field for this --
+  # build-user-config.yml does not, and silently ignores it.)
   - board: nice_nano//zmk
     shield: slabboard_left
     snippet: zmk-usb-logging
     cmake-args: -DCONFIG_LOG_PROCESS_THREAD_STARTUP_DELAY_MS=8000 -DCONFIG_INPUT_LOG_LEVEL_DBG=y
-    nickname: debug
+    artifact-name: slabboard_left_debug

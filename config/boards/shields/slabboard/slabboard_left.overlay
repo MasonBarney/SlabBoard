@@ -160,28 +160,33 @@
          * Axis correction lives here, not on the trackpad node -- see the long
          * comment there for why the chip's own flags are unusable.
          *
-         * MOUNTING-DEPENDENT. This value is not a property of the driver or
-         * the chip; it only cancels however the pad happens to be physically
-         * oriented, and it has had to change twice with no config change in
-         * between:
+         * The pad feeds ZMK [[-1, 0], [0, 1]] -- left/right mirrored, up/down
+         * correct -- so a single X inversion squares it up.
          *
-         *   pad feeds ZMK          needed transform
-         *   [[-1, 0], [0, 1]]      X_INVERT                    (until Oct 2026)
-         *   [[ 0, 1], [-1, 0]]     XY_SWAP | X_INVERT          (current)
+         * DO NOT CHANGE THIS ON A SINGLE OBSERVATION. The orientation is not
+         * stable across boots: measured 2026-10-13 over 9 power cycles of
+         * identical firmware, 8 were correct and 1 was wrong. The pad is
+         * siliconed down and has never moved. A one-off "the axes are wrong"
+         * is more likely a bad boot than a wrong transform.
          *
-         * Those two differ by a 90 degree rotation, which means the pad moved
-         * in its mount. If the axes go wrong again, re-derive from a fresh
-         * measurement rather than permuting flags -- and fix the mounting.
+         * This value was once changed to XY_SWAP | X_INVERT (e57d0d1) on the
+         * strength of exactly one such observation, which was wrong and had to
+         * be reverted. Power-cycle 5-10 times and count before touching it.
          *
-         * ORDERING TRAP: in app/src/pointing/input_processor_transform.c the
-         * swap rewrites the event CODE first, and the inverts are then tested
-         * against the POST-swap code. So with XY_SWAP set, X_INVERT negates
-         * what started life as the Y value. Naming the axis the event started
-         * on gives the wrong answer.
+         * See "The orientation is not stable across boots" in CLAUDE.md for the
+         * suspected cause -- the driver writes config after a blind 100 ms wait
+         * rather than waiting for the chip's RDY communication window.
+         *
+         * ORDERING TRAP, if a swap is ever needed here: in
+         * app/src/pointing/input_processor_transform.c the swap rewrites the
+         * event CODE first, and the inverts are then tested against the
+         * POST-swap code. So with XY_SWAP set, X_INVERT negates what started
+         * life as the Y value. Naming the axis the event started on gives the
+         * wrong answer.
          * See https://zmk.dev/docs/keymaps/input-processors
          */
         input-processors
-            = <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP | INPUT_TRANSFORM_X_INVERT)>
+            = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>
             , <&zip_auto_mouse 4 1100>
             ;
     };

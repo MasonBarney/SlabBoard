@@ -31,8 +31,9 @@ the published wiring diagram exactly.
 - **Trackpad** (left only): Azoteq TPS65 on `i2c0` — SDA `P0.17`, SCL `P0.20`,
   RDY `P1.11`, RST `P1.13` (active low), address `0x74`,
   `compatible = "azoteq,iqs5xx"`. The Azoteq board has no VCC pad: its `3V3` pad is
-  the supply and connects to the nice!nano's `VCC` pin. `flip-x` is set: as mounted,
-  X reads inverted while Y is correct (verified on hardware).
+  the supply and connects to the nice!nano's `VCC` pin. **No axis flags are set on
+  the trackpad node** — the axis is corrected in ZMK instead; see "Trackpad axes"
+  below before touching this.
   Free header pins remaining on the left: `P0.06`, `P0.08`, `P0.10`. Driver is the
   external module `AYM1607/zmk-driver-azoteq-iqs5xx`, pinned in `config/west.yml`.
   `P0.17`/`P0.20` are I²C on the left and encoder A/B on the right; each half
@@ -165,6 +166,45 @@ forced. Earlier notes claimed the right half's header was full — it was not. W
 matrix and encoder A/B wired it used 15 of 18, leaving `P1.13`, `P0.06` and `P0.08`
 free, so MOSI never needed `P1.01` and the switch never needed `P1.02`. Do not repeat
 the "header was full" reasoning.
+
+## Trackpad axes: correct them in ZMK, never with the chip's flags
+
+`switch-xy` / `flip-x` / `flip-y` on the `azoteq,iqs5xx` node **do not do what the
+binding says** on this TPS65. Measured over three flashed builds, finger direction →
+pointer direction:
+
+| `XY_CONFIG_0` written | up → | down → | left → | right → |
+|---|---|---|---|---|
+| `0x00` (no flags) | up | down | **right** | **left** |
+| `0x01` (`flip-x`) | left | right | down | up |
+| `0x07` (all three) | right | left | down | up |
+
+`0x00` writes no bits, so that row is the bare mounting. Solving the other two
+against it, `flip-x` acts as an **X/Y swap** and all-three as **swap + flip-Y**.
+No ordering of flips-and-swap reproduces that, so the documented semantics simply
+do not hold here.
+
+Likely cause: the driver writes the bits to `XY_CONFIG_0` (`0x0669`) but reads the
+**relative** registers `REL_X`/`REL_Y` (`0x0012`/`0x0014`). Azoteq documents that
+config against the absolute coordinates; the relative path does not honour it the
+same way.
+
+**So:** leave the trackpad node with no axis properties (`0x00`, the one state whose
+behaviour is known) and correct the axis on the input listener:
+
+```dts
+input-processors = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>;
+```
+
+Needs `#include <input/processors.dtsi>` and `#include <dt-bindings/zmk/input_transform.h>`.
+In `app/src/pointing/input_processor_transform.c` the swap rewrites the event code
+first and the inverts are tested against the **post-swap** code — so if a swap is ever
+added here, pick the invert for the axis the event ends up on, not the one it started
+on. With no swap, `X_INVERT` just negates `INPUT_REL_X`.
+
+Hardware-confirmed working as of `645c3b8`. If the axes go wrong again and `config/`
+has not changed, suspect the pad has physically rotated in its mount rather than
+reaching for the chip flags again.
 
 ## Known bug: the encoder over-triggers 4×
 

@@ -11,7 +11,7 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/pointing.h>   /* &mkp, &msc, LCLK/RCLK/MCLK */
+#include <dt-bindings/zmk/pointing.h>   /* &mkp, &msc, MB1..MB5 */
 
 /* Custom Device-tree */
 &mt {
@@ -201,21 +201,21 @@
              * gesture is unreliable.
              *
              * Reached two ways: held with &mo 4 on the right thumb, or
-             * automatically whenever the trackpad is touched (zip_temp_layer,
+             * automatically whenever the trackpad is touched (zip_auto_mouse,
              * see slabboard_left.overlay). Everything except the five button
              * keys is &trans, so the rest of the board types normally while
              * the layer is up.
              *
-             *   pos 25  A -> back      pos 28  F -> LEFT click
-             *   pos 26  S -> middle    pos 29  G -> forward
-             *   pos 27  D -> right
+             *   pos 25  A -> MB4 back      pos 28  F -> MB1 LEFT click
+             *   pos 26  S -> MB3 middle    pos 29  G -> MB5 forward
+             *   pos 27  D -> MB2 right
              */
             mouse_layer {
                 display-name = "Mouse";
                 bindings = <
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
-                    &trans        &mkp MB4      &mkp MCLK     &mkp RCLK     &mkp LCLK     &mkp MB5      &trans        &trans        &trans        &trans        &trans        &trans
+                    &trans        &mkp MB4      &mkp MB3     &mkp MB2     &mkp MB1     &mkp MB5      &trans        &trans        &trans        &trans        &trans        &trans
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
                 >;

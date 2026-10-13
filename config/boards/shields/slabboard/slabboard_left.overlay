@@ -116,25 +116,39 @@
 /*
  * Mouse layer auto-activation.
  *
- * zip_temp_layer below raises keymap layer 4 (Mouse) whenever the trackpad
- * reports movement and drops it again after 2 s of no events, so the left-hand
- * home row is already mouse buttons by the time a finger lands on the pad.
- * The TPS65's own click-and-drag gesture is unreliable, which is the point of
- * the layer.
+ * zip_auto_mouse raises keymap layer 4 (Mouse) whenever the trackpad reports
+ * movement and drops it again after a quiet period, so the left-hand home row
+ * is already mouse buttons by the time a finger lands on the pad. The TPS65's
+ * own click-and-drag gesture is unreliable, which is the point of the layer.
  *
- * Two properties matter, and both are set on the pre-defined instance:
+ * Named and shaped to match ergohaven-zmk-config's velvet_v3_ui, which uses
+ * the same zmk,input-processor-temp-layer under this name. Values track that
+ * config except where a trackpad differs from a trackball:
  *
- *  - excluded-positions lists the five button keys (A S D F G = 25..29).
- *    Any key press normally drops the layer; without this, pressing a mouse
- *    button would cancel the very layer it lives on.
- *  - require-prior-idle-ms stops the layer arming mid-sentence: brushing the
- *    pad while typing will not silently turn the home row into mouse buttons.
+ *  - require-prior-idle-ms = 800 is velvet's tested value, and matters MORE
+ *    here: a trackball only emits events when deliberately spun, while a pad
+ *    fires on any brush or resting finger. Keeps the home row from silently
+ *    turning into mouse buttons mid-sentence.
+ *  - the 1100 ms timeout is longer than velvet's 700. With a ball you spin and
+ *    click in one motion; with a pad you often move, lift, pause to aim, then
+ *    click -- and at 700 ms that pause drops the layer and F types "f".
+ *    Provisional: tune on hardware.
+ *  - excluded-positions deliberately does NOT match velvet's empty list. Any
+ *    key press drops the layer, and ZMK routes a key release to the binding
+ *    resolved at PRESS time, so a single click or drag survives an empty list.
+ *    But pressing a second button while holding the first would fall through
+ *    to the base layer and type a letter. Listing 25..29 (A S D F G) closes
+ *    that at no cost.
  *
  * Layer 4 is also bound to &mo 4 on the right thumb for deliberate use.
  */
-&zip_temp_layer {
-    require-prior-idle-ms = <200>;
-    excluded-positions = <25 26 27 28 29>;
+/ {
+    zip_auto_mouse: zip_auto_mouse {
+        compatible = "zmk,input-processor-temp-layer";
+        #input-processor-cells = <2>;
+        require-prior-idle-ms = <800>;
+        excluded-positions = <25 26 27 28 29>;
+    };
 };
 
 / {
@@ -156,7 +170,7 @@
          */
         input-processors
             = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>
-            , <&zip_temp_layer 4 2000>
+            , <&zip_auto_mouse 4 1100>
             ;
     };
 };

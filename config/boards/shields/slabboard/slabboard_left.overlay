@@ -185,8 +185,26 @@
          * wrong answer.
          * See https://zmk.dev/docs/keymaps/input-processors
          */
+        /*
+         * Pointer gain. The IQS5xx reports relative movement in its own
+         * coordinate units and the driver passes them through untouched, which
+         * on this pad is too low -- crossing the screen took several swipes.
+         * 3x is a starting point, not a measured value; tune the first number.
+         *
+         * The pre-defined zip_xy_scaler sets track-remainders, so the fraction
+         * lost to integer division is carried into the next event instead of
+         * being discarded. Without that, scaling down would swallow slow
+         * movement entirely; scaling up it keeps fine control intact.
+         *
+         * ZMK's docs cap both parameters at 16 to avoid overflow.
+         *
+         * Order within this list does not matter for the scaler: multiplying
+         * and negating commute, and zip_auto_mouse only raises a layer -- it
+         * never touches the event value.
+         */
         input-processors
             = <&zip_xy_transform INPUT_TRANSFORM_X_INVERT>
+            , <&zip_xy_scaler 3 1>
             , <&zip_auto_mouse 4 1100>
             ;
     };

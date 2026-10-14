@@ -39,10 +39,12 @@ include:
   # dropped" notices, and every boot but the first began at ~7.8 s uptime.
   #
   #   ZMK_LOGGING_MINIMAL   silences zmk. NOT ZMK_LOG_LEVEL_ERR: app/Kconfig
-  #   + ZMK_LOG_LEVEL=1      sets `config ZMK_LOG_LEVEL / default 4` directly,
+  #   + LOG_DEFAULT_LEVEL=1  sets `config ZMK_LOG_LEVEL / default 4` directly,
   #                         so the choice symbol from Zephyr's log_config
   #                         template is ignored. ZMK_LOGGING_MINIMAL is the
-  #                         guard on that default; the integer sets the rest.
+  #                         guard on that default. Do not assign ZMK_LOG_LEVEL
+  #                         itself -- it is a derived int with no prompt, and
+  #                         doing so failed the build (a9737f5).
   #   INPUT_LOG_LEVEL_INF   silences the input subsystem's per-event DBG spam
   #                         while keeping iqs5xx's own INF and ERR messages
   #                         (the driver registers under CONFIG_INPUT_LOG_LEVEL)
@@ -66,6 +68,6 @@ include:
       -DCONFIG_LOG_PROCESS_THREAD_STARTUP_DELAY_MS=8000
       -DCONFIG_LOG_BUFFER_SIZE=32768
       -DCONFIG_ZMK_LOGGING_MINIMAL=y
-      -DCONFIG_ZMK_LOG_LEVEL=1
+      -DCONFIG_LOG_DEFAULT_LEVEL=1
       -DCONFIG_INPUT_LOG_LEVEL_INF=y
     artifact-name: slabboard_left_debug

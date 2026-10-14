@@ -206,29 +206,46 @@ first and the inverts are tested against the **post-swap** code — so if a swap
 added here, pick the invert for the axis the event ends up on, not the one it started
 on. With no swap, `X_INVERT` just negates `INPUT_REL_X`.
 
-### The orientation is not stable across boots -- do not chase it
+### Boot-unstable orientation -- FIXED, was a driver init race
 
-**Measured 2026-10-13: 9 power cycles, 8 correct and 1 wrong.** The pad is siliconed
-down and has never moved. The orientation differs *between boots of identical
-firmware*, so any single observation of "the axes are wrong" may be a bad boot rather
-than a persistent state.
+**History: 2 failures in 28 power cycles (1/9, then 1/19) of identical firmware**, with
+the pad siliconed down and never moved. The orientation differed *between boots*.
 
-**Before changing any transform, power-cycle 5-10 times and count.** A one-off
-observation is not a measurement here. Earlier entries in this file and several
-commits in the history treated single observations as ground truth; at least one
-"fix" was derived from what was probably a single bad boot.
+**Root cause**, found by USB logging the init window. `iqs5xx_init()` armed the RDY
+interrupt ten lines before calling `iqs5xx_setup_device()`. RDY starts toggling as soon
+as the chip boots, and each edge submits `data->work`, whose handler reads registers and
+calls `iqs5xx_end_comm_window()` -- concurrently with the config writes, on the same I2C
+bus. The handler could close a communication window a write depended on, so config
+landed unreliably.
 
-Suspected cause, in `AYM1607/zmk-driver-azoteq-iqs5xx` at the pinned `27321f0`:
-`iqs5xx_init()` resets the chip, waits a blind `k_msleep(100)`, then calls
-`iqs5xx_setup_device()` to write config. The IQS5xx only accepts I2C inside a
-communication window it signals on RDY. The driver *ends* comm windows
-(`iqs5xx_end_comm_window`) but never waits to *enter* one -- RDY is only wired up as a
-runtime interrupt. So whether each config write lands depends on where that blind
-100 ms falls in the chip's RDY cycle.
+The log showed it directly: the work handler's `Device reset detected` printed **17 ms
+before** init's `IQS5xx trackpad initialized`.
 
-That also better explains the earlier "the flags don't mean what they're documented to
-mean" conclusion: the bits probably mean exactly what Azoteq says, they just do not
-always arrive. Treat that section below with suspicion.
+**Fix:** move the interrupt enable to after `setup_device()` succeeds.
+`MasonBarney/zmk-driver-azoteq-iqs5xx` branch `fix-init-race`, commit `aaab1b3`, pinned
+in `config/west.yml`. One statement moved. Worth sending upstream; if merged, point
+`west.yml` back at `aym1607`.
+
+**Result: 25 consecutive clean power cycles** (2026-10-14), against a 7.1% prior failure
+rate. Taken alone that is suggestive rather than conclusive -- 16% chance of a clean
+run of 25 if nothing had changed -- but combined with a log-confirmed mechanism and a
+fix that addresses exactly it, the case is good.
+
+**Still true, and the reason the old guidance stands:** before changing any axis
+transform, power-cycle and count. A one-off "the axes are wrong" is not a measurement.
+Two commits in this repo's history were derived from single bad boots and had to be
+reverted.
+
+That also explains the earlier "the flags don't mean what they're documented to mean"
+conclusion: the bits very likely mean exactly what Azoteq says, they just did not
+reliably arrive. Treat that section below as unreliable -- it was measured one boot at
+a time, through the race.
+
+**Not fixed, and the next suspect if orientation ever flips mid-session rather than at
+boot:** the work handler acknowledges a runtime `SHOW_RESET` without re-applying any
+configuration, so a watchdog reset leaves the chip on factory defaults. The driver
+enables `IQS5XX_WDT`. The tell is `Device reset detected` in the log at the moment it
+happens.
 
 If it goes wrong again: take a fresh four-direction measurement and solve for the
 transform, rather than permuting flags. And mind the ordering trap -- in

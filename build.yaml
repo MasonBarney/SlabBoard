@@ -31,6 +31,19 @@ include:
   # processing thread for 8 s so boot-time messages are still buffered when you
   # attach a terminal -- without it, init is over before you can connect.
   #
+  # The other three settings exist because the first attempt at this capture
+  # came back empty. Buffering for 8 s only helps if the messages survive the
+  # wait, and they did not: across 19 boots the zmk module logged 10974 lines
+  # and the input subsystem 2939, against 32 from iqs5xx. That flood evicted
+  # the init window from the ring buffer before the flush -- 21 "messages
+  # dropped" notices, and every boot but the first began at ~7.8 s uptime.
+  #
+  #   ZMK_LOG_LEVEL_ERR     silences the 10974 zmk lines
+  #   INPUT_LOG_LEVEL_INF   silences the input subsystem's per-event DBG spam
+  #                         while keeping iqs5xx's own INF and ERR messages
+  #                         (the driver registers under CONFIG_INPUT_LOG_LEVEL)
+  #   LOG_BUFFER_SIZE       32 KB, up from ZMK's 8 KB default, for headroom
+  #
   # NOT for daily use: logging costs battery, and this build drops the
   # studio-rpc-usb-uart snippet because only one snippet per entry is supported
   # (the workflow passes the value as a single -S argument).
@@ -45,5 +58,9 @@ include:
   - board: nice_nano//zmk
     shield: slabboard_left
     snippet: zmk-usb-logging
-    cmake-args: -DCONFIG_LOG_PROCESS_THREAD_STARTUP_DELAY_MS=8000 -DCONFIG_INPUT_LOG_LEVEL_DBG=y
+    cmake-args: >-
+      -DCONFIG_LOG_PROCESS_THREAD_STARTUP_DELAY_MS=8000
+      -DCONFIG_LOG_BUFFER_SIZE=32768
+      -DCONFIG_ZMK_LOG_LEVEL_ERR=y
+      -DCONFIG_INPUT_LOG_LEVEL_INF=y
     artifact-name: slabboard_left_debug

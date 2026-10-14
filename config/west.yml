@@ -15,14 +15,30 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: aym1607
       url-base: https://github.com/AYM1607
+    - name: masonbarney
+      url-base: https://github.com/MasonBarney
   projects:
     - name: zmk
       remote: zmk
       revision: 641514a97db345f499dd50b0360e594270f008fe
       import: app/west.yml
     # Azoteq IQS5xx trackpad driver. README lists the TPS65 as tested.
+    #
+    # Pointed at a fork of AYM1607's driver, which this commit forks from at
+    # 27321f0 -- the revision this file pinned before. The single patch on top
+    # (branch fix-init-race) moves the RDY interrupt enable to AFTER
+    # iqs5xx_setup_device() writes the chip's configuration.
+    #
+    # Upstream arms that interrupt ten lines earlier, so RDY edges submit the
+    # work handler -- which reads registers and calls iqs5xx_end_comm_window()
+    # -- while config writes are still in flight on the same I2C bus. Measured
+    # symptom: wrong axis orientation on roughly one boot in nine, with the
+    # handler logging "Device reset detected" 17 ms BEFORE init logged
+    # "IQS5xx trackpad initialized".
+    #
+    # Worth sending upstream. If it is merged, point this back at aym1607.
     - name: zmk-driver-azoteq-iqs5xx
-      remote: aym1607
-      revision: 27321f0232b50f0af31eb27ff97d539933467ea4
+      remote: masonbarney
+      revision: aaab1b352dd81b22e04761d2cc74a32e781b911d
   self:
     path: config

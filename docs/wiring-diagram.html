@@ -166,9 +166,9 @@
       <div><dt>MCU</dt><dd>nice!nano v2 &times; 2</dd></div>
       <div><dt>Matrix</dt><dd>5 rows &times; 6 cols, per half</dd></div>
       <div><dt>Left half adds</dt><dd>TPS65 trackpad (I&sup2;C) + nice!view (SPI)</dd></div>
-      <div><dt>Right half adds</dt><dd>EC12 rotary encoder + 5-way switch</dd></div>
+      <div><dt>Right half adds</dt><dd>DFRobot SEN0235 encoder + 5-way switch</dd></div>
     </dl>
-    <div class="reflink" style="border-left-color:var(--row)"><b>Revision 2</b><span>Two changes from the built prototype. The nice!view has moved from the right half to the <b>left</b>: a split peripheral cannot show a layer indicator &mdash; ZMK's split link never carries layer state &mdash; so the display must sit on the central half. And the <b>EC12 push switch has moved off the <code>P1.02</code> inner hole onto <code>P0.08</code></b> on the edge header, where it always could have gone. Revision 2 uses edge-header pins only. <b>New: a 5-way navigation switch on the right half</b>, driven as a seventh column on <code>P1.13</code> (see below). <b>The firmware still builds revision 1, with the display on the right and the switch unimplemented.</b> Do not wire the prototype from this page.</span></div>
+    <div class="reflink" style="border-left-color:var(--row)"><b>Revision 2</b><span>Two changes from the built prototype. The nice!view has moved from the right half to the <b>left</b>: a split peripheral cannot show a layer indicator &mdash; ZMK's split link never carries layer state &mdash; so the display must sit on the central half. And the <b>encoder push button has moved off the <code>P1.02</code> inner hole onto <code>P0.08</code></b> on the edge header, where it always could have gone. Revision 2 uses edge-header pins only. <b>New: a 5-way navigation switch on the right half</b>, driven as a seventh column on <code>P1.13</code> (see below). <b>The firmware still builds revision 1, with the display on the right and the switch unimplemented.</b> Do not wire the prototype from this page.</span></div>
     <div class="reflink">
       <b>Cross-check</b>
       <span>Official nice!nano v2 pinout from nicekeyboards:
@@ -537,14 +537,14 @@
     <p class="lede">
       <b>No display on this half in revision 2.</b> The nice!view has moved to the left, so the three pins
       it used here — <code>P0.10</code>, <code>P1.11</code> and the <code>P1.01</code> inner hole — are
-      free again. The only peripheral left is the EC12 encoder: A on <code>P0.17</code>, B on
+      free again. The encoder here is a <b>DFRobot SEN0235</b>, an EC11 on a small breakout with five pads (VCC, GND, A, B, C). A on <code>P0.17</code>, B on
       <code>P0.20</code>, and the push switch on <code>P0.08</code>, three positions above A in the same
       column, so the whole encoder harness runs as one block. The 5-way navigation switch takes
       <code>P1.13</code> as a seventh column and shares the five rows, so it costs one pin. That leaves
       <code>P1.11</code>, <code>P0.10</code> and <code>P0.06</code> spare on the header.
     </p>
     <div class="diagram-wrap">
-<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 right half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 as column 6 for the 5-way switch common, P1.11 and P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 spare, P0.08 as the EC12 encoder push switch, two GND pins, P0.17 and P0.20 as EC12 encoder A and B, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
+<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 right half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 as column 6 for the 5-way switch common, P1.11 and P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 spare, P0.08 as the SEN0235 encoder push button, two GND pins, P0.17 and P0.20 as SEN0235 encoder A and B, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
   <rect class="boardbody" x="380" y="40" width="140" height="520" rx="10"/>
   <rect class="usbnotch" x="415" y="16" width="70" height="26" rx="4"/>
   <text class="usblabel" x="450" y="34" text-anchor="middle">USB-C</text>
@@ -655,7 +655,7 @@
     <circle cx="520" cy="120" r="3.5" class="pad"/>
     <circle cx="600" cy="120" r="4" class="dot enc"/>
     <text x="528" y="115" text-anchor="start" class="silk enc">P0.08</text>
-    <text x="608" y="119" text-anchor="start" class="assign enc">EC12 SW</text>
+    <text x="608" y="119" text-anchor="start" class="assign enc">SEN0235 C · button</text>
     <text x="608" y="131" text-anchor="start" class="alias">RXI · pro_micro 0</text>
   </g>
   <g>
@@ -677,7 +677,7 @@
     <circle cx="520" cy="246" r="3.5" class="pad"/>
     <circle cx="600" cy="246" r="4" class="dot enc"/>
     <text x="528" y="241" text-anchor="start" class="silk enc">P0.17</text>
-    <text x="608" y="245" text-anchor="start" class="assign enc">EC12 A</text>
+    <text x="608" y="245" text-anchor="start" class="assign enc">SEN0235 A</text>
     <text x="608" y="257" text-anchor="start" class="alias">pro_micro 2</text>
   </g>
   <g>
@@ -685,7 +685,7 @@
     <circle cx="520" cy="288" r="3.5" class="pad"/>
     <circle cx="600" cy="288" r="4" class="dot enc"/>
     <text x="528" y="283" text-anchor="start" class="silk enc">P0.20</text>
-    <text x="608" y="287" text-anchor="start" class="assign enc">EC12 B</text>
+    <text x="608" y="287" text-anchor="start" class="assign enc">SEN0235 B</text>
     <text x="608" y="299" text-anchor="start" class="alias">pro_micro 3</text>
   </g>
   <g>
@@ -757,14 +757,14 @@
         </tbody>
       </table>
       <table>
-        <caption>EC12 rotary encoder — right half</caption>
-        <thead><tr><th>EC12 leg</th><th>Silkscreen</th></tr></thead>
+        <caption>DFRobot SEN0235 encoder — right half</caption>
+        <thead><tr><th>SEN0235 pad</th><th>Goes to</th></tr></thead>
         <tbody>
+          <tr><td>VCC</td><td class="pin">VCC (3V bus)</td></tr>
+          <tr><td>GND</td><td class="pin">GND</td></tr>
           <tr><td>A</td><td class="pin">P0.17</td></tr>
           <tr><td>B</td><td class="pin">P0.20</td></tr>
-          <tr><td>C (common)</td><td class="pin">GND</td></tr>
-          <tr><td>SW leg 1</td><td class="pin">P0.08</td></tr>
-          <tr><td>SW leg 2</td><td class="pin">GND</td></tr>
+          <tr><td>C (button)</td><td class="pin">P0.08</td></tr>
         </tbody>
       </table>
       <table>
@@ -1022,7 +1022,7 @@
           address the same physical pin. Pick one and stay with it across your matrix transform, encoder and
           display nodes — mixing them in one file is where wiring bugs hide.</li>
         <li><b>Nothing lands on an inner hole any more.</b> Revision 1 pushed nice!view MOSI to
-          <code>P1.01</code> and the EC12 switch to <code>P1.02</code> on the grounds that the right half's
+          <code>P1.01</code> and the encoder push button to <code>P1.02</code> on the grounds that the right half's
           18-pin edge header was full. It was not — that half used 15 of 18, and <code>P1.13</code>,
           <code>P0.06</code> and <code>P0.08</code> were free. Revision 2 puts both signals on header pins and
           leaves <code>P1.01</code>, <code>P1.02</code> and <code>P1.07</code> spare. They are ordinary plated
@@ -1032,8 +1032,12 @@
           alone.)</li>
         <li><b>TPS65 RDY is optional.</b> Some Azoteq TPS65 breakouts don't expose a data-ready line — if yours
           doesn't, leave P1.11 unused on the left half and poll the trackpad over I&sup2;C instead.</li>
-        <li><b>EC12 leg order varies by part.</b> Confirm which of the five legs is the shared common (C) with a
-          continuity beep before soldering — on most EC12s it's the centre pin of each 3-pin group, but check yours.</li>
+        <li><b>The SEN0235 is a breakout, not a bare encoder.</b> Its five pads are labelled VCC, GND, A, B and C
+          (C is the push button; DFRobot's schematic calls the same net D). The board wires the encoder's common and the
+          button's return internally, so you only run its GND pad to ground; there are no separate common legs. Power it from
+          <code>VCC</code>, not <code>RAW</code>: it runs on 3.3&nbsp;V, and its signal pins must not see more than the
+          nice!nano's 3.3&nbsp;V. It has 20 detents, so the firmware uses <code>steps = &lt;80&gt;</code> and
+          <code>triggers-per-rotation = &lt;20&gt;</code>.</li>
         <li><b>Thick battery wire will not fit <code>B+</code>/<code>B&minus;</code>.</b> Those two holes are
           smaller than the header ones. You do not have to thread the wire through: tin the ring around the hole,
           tin the lead, and solder the wire flat against it, then anchor the wire to the board so nothing tugs the

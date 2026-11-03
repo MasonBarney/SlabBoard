@@ -52,13 +52,15 @@
         compatible = "alps,ec11";
         a-gpios = <&gpio0 17 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;   /* EC12 A  P0.17 */
         b-gpios = <&gpio0 20 (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;   /* EC12 B  P0.20 */
-        steps = <30>;
+        /* DFRobot SEN0235: 20 detents. steps counts quadrature transitions
+           (4 per detent), so 80 here with 20 triggers = one action per click. */
+        steps = <80>;
         status = "disabled";
     };
 
     sensors: sensors {
         compatible = "zmk,keymap-sensors";
         sensors = <&right_encoder>;
-        triggers-per-rotation = <30>;
+        triggers-per-rotation = <20>;
     };
 };

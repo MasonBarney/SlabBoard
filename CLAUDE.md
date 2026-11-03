@@ -259,10 +259,12 @@ transform, rather than permuting flags. And mind the ordering trap -- in
 first and the inverts are tested against the **post-swap** code, so with `XY_SWAP`
 set, `X_INVERT` negates what started as the Y value.
 
-## Known bug: the encoder over-triggers 4×
+## Fixed: the encoder over-triggered 4×
 
-`slabboard.dtsi` has `steps = <30>` and `triggers-per-rotation = <30>`. That fires the
-bound behaviour **four times per physical detent**, whatever encoder is fitted.
+`slabboard.dtsi` had `steps = <30>` and `triggers-per-rotation = <30>`, which fired the
+bound behaviour **four times per physical detent**. Now `80` / `20` for the fitted
+DFRobot SEN0235 (20 detents), as of the `five-way-switch` branch. Not yet verified on
+hardware.
 
 `steps` is **quadrature transitions per revolution — 4 × the detent count**, not the
 datasheet's "pulses per revolution." ZMK's config reference calls it *"Number of

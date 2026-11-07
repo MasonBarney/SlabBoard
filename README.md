@@ -48,6 +48,7 @@ nicekeyboards' [official nice!nano v2 pinout](https://nicekeyboards.com/static/1
 | COL 0–5 (left) | `P0.31`, `P0.29`, `P0.02`, `P1.15`, `P0.09`, `P1.06` |
 | COL 6–11 (right) | the same six **reversed**, with `col-offset = <6>` |
 | EC12 encoder (right) | A `P0.17`, B `P0.20` |
+| 5-way switch (right) | common → COL 12 `P1.13`; up/down/left/right/centre → ROW 0–4, one diode each |
 | TPS65 trackpad (left) | SDA `P0.17`, SCL `P0.20`, RDY `P1.11`, RST `P1.13`, 3V3 → `VCC` |
 
 \* `P1.01`, `P1.02` and `P1.07` are plated through-holes set inboard of the two edge
@@ -92,8 +93,8 @@ See [`CLAUDE.md`](CLAUDE.md) for the nice!nano silkscreen mapping and build note
 
 ## Layout
 
-`config/slabboard.keymap` — four layers (Base / Lower / Raise / Adjust), 60
-bindings each, with an encoder binding per layer.
+`config/slabboard.keymap` — five layers (Base / Lower / Raise / Adjust / Mouse),
+65 bindings each (the last five are the 5-way switch), with an encoder binding per layer.
 
 [`docs/keymap.md`](docs/keymap.md) renders all four layers as grids.
 

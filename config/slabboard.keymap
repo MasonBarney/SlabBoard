@@ -5,6 +5,10 @@
  * inner index), right half columns 6-11 (inner index to outer pinky), so
  * each row below reads straight across the keyboard left to right.
  *
+ * Positions 60-64, the last line of every layer, are the 5-way navigation
+ * switch on the right half: up, down, left, right, centre. Arrows and Enter
+ * on Base, scroll and middle click on Mouse, transparent elsewhere.
+ *
  * SPDX-License-Identifier: MIT
  */
 
@@ -159,6 +163,8 @@
                     &kp TAB       &mt LG(A) A  &kp S     &kp D     &mt LG(F) F      &kp G         &kp H         &kp J         &kp K         &kp L         &kp SEMI      &kp SQT
                     &bspc_del  &mt LG(Z) Z  &mt LG(X) X   &mt LG(C) C &mt LG(V) V  &mt LG(B) B         &kp N         &kp M         &kp COMMA     &kp DOT       &kp FSLH      &kp GRAVE
                     &kp LGUI      &kp LALT      &mo 3         &mo 1         &kp LSHIFT    &kp LGUI      &mt LG(RET) RET         &kp SPACE       &mo 2         &mo 4         &kp RALT      &kp LC(ESC)
+                    /* 5-way switch: up down left right centre */
+                    &kp UP        &kp DOWN      &kp LEFT      &kp RIGHT     &kp RET
                 >;
                     sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
             };
@@ -170,6 +176,8 @@
                     &trans        &trans        &trans        &trans        &trans        &trans        &kp LA(LEFT)    &mt LA(LEFT) LEFT      &kp DOWN       &kp UP       &mt LA(RIGHT) RIGHT           &kp LA(RIGHT)
                     &trans        &trans        &cap_in_Chrome         &paste_unformatted_word  &kp LC(LA(LG(M)))        &trans        &trans        &trans        &trans        &kp END       &kp PG_UP     &kp PG_DN
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
+                    /* 5-way switch: up down left right centre */
+                    &trans        &trans        &trans        &trans        &trans
                 >;
                     sensor-bindings = <&inc_dec_kp PG_UP PG_DN>;
             };
@@ -181,6 +189,8 @@
                     &trans        &trans        &trans        &trans        &trans        &trans        &kp UNDER     &kp PLUS      &kp LBRC      &kp RBRC      &kp PIPE      &kp TILDE
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
+                    /* 5-way switch: up down left right centre */
+                    &trans        &trans        &trans        &trans        &trans
                 >;
                     sensor-bindings = <&inc_dec_kp C_NEXT C_PREV>;
             };
@@ -192,6 +202,8 @@
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
+                    /* 5-way switch: up down left right centre */
+                    &trans        &trans        &trans        &trans        &trans
                 >;
                     sensor-bindings = <&inc_dec_kp C_BRI_UP C_BRI_DN>;
             };
@@ -209,6 +221,9 @@
              *   pos 25  A -> MB4 back      pos 28  F -> MB1 LEFT click
              *   pos 26  S -> MB3 middle    pos 29  G -> MB5 forward
              *   pos 27  D -> MB2 right
+             *
+             * The 5-way switch (60-64) scrolls here and clicks middle in the
+             * centre, so the right thumb can scroll while the left drives the pad.
              */
             mouse_layer {
                 display-name = "Mouse";
@@ -218,6 +233,8 @@
                     &trans        &mkp MB4      &mkp MB3     &mkp MB2     &mkp MB1     &mkp MB5      &trans        &trans        &trans        &trans        &trans        &trans
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
                     &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans        &trans
+                    /* 5-way switch: up down left right centre */
+                    &msc SCRL_UP  &msc SCRL_DOWN &msc SCRL_LEFT &msc SCRL_RIGHT &mkp MB3
                 >;
                     sensor-bindings = <&enc_scroll>;
             };

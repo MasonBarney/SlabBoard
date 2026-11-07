@@ -19,6 +19,14 @@
      * P1.06 -> P0.31 and the LEFT half carries the reversal instead.
      *
      * Verified on hardware: this order types correctly.
+     *
+     * COL 12 (P1.13) is not a key column. It drives the common pin of the
+     * 5-way navigation switch, whose five contacts each reach a row through
+     * their own diode (band toward the row, like every other key):
+     *   ROW 0 P0.22 up    ROW 1 P0.24 down   ROW 2 P1.00 left
+     *   ROW 3 P0.11 right ROW 4 P1.04 centre
+     * Unverified on hardware. If a direction comes out wrong, swap the
+     * bindings at positions 60-64 in the keymap rather than rewiring.
      */
     col-gpios
         = <&gpio1  6 GPIO_ACTIVE_HIGH>   /* COL 6   P1.06 */
@@ -27,6 +35,7 @@
         , <&gpio0  2 GPIO_ACTIVE_HIGH>   /* COL 9   P0.02 */
         , <&gpio0 29 GPIO_ACTIVE_HIGH>   /* COL 10  P0.29 */
         , <&gpio0 31 GPIO_ACTIVE_HIGH>   /* COL 11  P0.31 */
+        , <&gpio1 13 GPIO_ACTIVE_HIGH>   /* COL 12  P1.13  5-way switch common */
         ;
 };
 

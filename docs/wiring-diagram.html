@@ -1,5 +1,5 @@
 <meta charset="utf-8">
-<title>nice!nano Wiring Reference</title>
+<title>SlabBoard Wiring Reference</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
   :root{
@@ -166,9 +166,9 @@
       <div><dt>MCU</dt><dd>nice!nano v2 &times; 2</dd></div>
       <div><dt>Matrix</dt><dd>5 rows &times; 6 cols, per half</dd></div>
       <div><dt>Left half adds</dt><dd>TPS65 trackpad (I&sup2;C) + nice!view (SPI)</dd></div>
-      <div><dt>Right half adds</dt><dd>EC12 rotary encoder</dd></div>
+      <div><dt>Right half adds</dt><dd>DFRobot SEN0235 encoder + 5-way switch</dd></div>
     </dl>
-    <div class="reflink" style="border-left-color:var(--row)"><b>Revision 2</b><span>Two changes from the built prototype. The nice!view has moved from the right half to the <b>left</b>: a split peripheral cannot show a layer indicator &mdash; ZMK's split link never carries layer state &mdash; so the display must sit on the central half. And the <b>EC12 push switch has moved off the <code>P1.02</code> inner hole onto <code>P0.08</code></b> on the edge header, where it always could have gone. Revision 2 uses edge-header pins only. <b>The firmware still builds revision 1, with the display on the right and the switch unimplemented.</b> Do not wire the prototype from this page.</span></div>
+    <div class="reflink" style="border-left-color:var(--row)"><b>Revision 2</b><span>Two changes from the built prototype. The nice!view has moved from the right half to the <b>left</b>: a split peripheral cannot show a layer indicator &mdash; ZMK's split link never carries layer state &mdash; so the display must sit on the central half. And the <b>encoder push button has moved off the <code>P1.02</code> inner hole onto <code>P0.08</code></b> on the edge header, where it always could have gone. Revision 2 uses edge-header pins only. <b>New: a 5-way navigation switch on the right half</b>, driven as a seventh column on <code>P1.13</code> (see below). <b>The firmware still builds revision 1, with the display on the right and the switch unimplemented.</b> Do not wire the prototype from this page.</span></div>
     <div class="reflink">
       <b>Cross-check</b>
       <span>Official nice!nano v2 pinout from nicekeyboards:
@@ -537,13 +537,14 @@
     <p class="lede">
       <b>No display on this half in revision 2.</b> The nice!view has moved to the left, so the three pins
       it used here — <code>P0.10</code>, <code>P1.11</code> and the <code>P1.01</code> inner hole — are
-      free again. The only peripheral left is the EC12 encoder: A on <code>P0.17</code>, B on
+      free again. The encoder here is a <b>DFRobot SEN0235</b>, an EC11 on a small breakout with five pads (VCC, GND, A, B, C). A on <code>P0.17</code>, B on
       <code>P0.20</code>, and the push switch on <code>P0.08</code>, three positions above A in the same
-      column, so the whole encoder harness runs as one block. That leaves <code>P1.13</code>,
+      column, so the whole encoder harness runs as one block. The 5-way navigation switch takes
+      <code>P1.13</code> as a seventh column and shares the five rows, so it costs one pin. That leaves
       <code>P1.11</code>, <code>P0.10</code> and <code>P0.06</code> spare on the header.
     </p>
     <div class="diagram-wrap">
-<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 right half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13, P1.11 and P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 spare, P0.08 as the EC12 encoder push switch, two GND pins, P0.17 and P0.20 as EC12 encoder A and B, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
+<svg viewBox="0 0 900 620" role="img" aria-label="nice!nano v2 right half, viewed from the bottom with USB-C at the top. Left column top to bottom: RAW, GND, RST, VCC, then P0.31, P0.29, P0.02 and P1.15 as matrix columns 5, 4, 3 and 2, P1.13 as column 6 for the 5-way switch common, P1.11 and P0.10 spare, and P0.09 as matrix column 1. Right column top to bottom: P0.06 spare, P0.08 as the SEN0235 encoder push button, two GND pins, P0.17 and P0.20 as SEN0235 encoder A and B, then P0.22, P0.24, P1.00, P0.11 and P1.04 as matrix rows 0 through 4, and P1.06 as matrix column 0.">
   <rect class="boardbody" x="380" y="40" width="140" height="520" rx="10"/>
   <rect class="usbnotch" x="415" y="16" width="70" height="26" rx="4"/>
   <text class="usblabel" x="450" y="34" text-anchor="middle">USB-C</text>
@@ -610,11 +611,11 @@
     <text x="292" y="383" text-anchor="end" class="alias">A0 · pro_micro 18</text>
   </g>
   <g>
-    <line x1="380" y1="414" x2="300" y2="414" class="leader spare"/>
+    <line x1="380" y1="414" x2="300" y2="414" class="leader col"/>
     <circle cx="380" cy="414" r="3.5" class="pad"/>
-    <circle cx="300" cy="414" r="4" class="dot spare"/>
-    <text x="372" y="409" text-anchor="end" class="silk spare">P1.13</text>
-    <text x="292" y="413" text-anchor="end" class="assign spare">spare</text>
+    <circle cx="300" cy="414" r="4" class="dot col"/>
+    <text x="372" y="409" text-anchor="end" class="silk col">P1.13</text>
+    <text x="292" y="413" text-anchor="end" class="assign col">COL 6 · 5-way common</text>
     <text x="292" y="425" text-anchor="end" class="alias">SCK · pro_micro 15</text>
   </g>
   <g>
@@ -654,7 +655,7 @@
     <circle cx="520" cy="120" r="3.5" class="pad"/>
     <circle cx="600" cy="120" r="4" class="dot enc"/>
     <text x="528" y="115" text-anchor="start" class="silk enc">P0.08</text>
-    <text x="608" y="119" text-anchor="start" class="assign enc">EC12 SW</text>
+    <text x="608" y="119" text-anchor="start" class="assign enc">SEN0235 C · button</text>
     <text x="608" y="131" text-anchor="start" class="alias">RXI · pro_micro 0</text>
   </g>
   <g>
@@ -676,7 +677,7 @@
     <circle cx="520" cy="246" r="3.5" class="pad"/>
     <circle cx="600" cy="246" r="4" class="dot enc"/>
     <text x="528" y="241" text-anchor="start" class="silk enc">P0.17</text>
-    <text x="608" y="245" text-anchor="start" class="assign enc">EC12 A</text>
+    <text x="608" y="245" text-anchor="start" class="assign enc">SEN0235 A</text>
     <text x="608" y="257" text-anchor="start" class="alias">pro_micro 2</text>
   </g>
   <g>
@@ -684,7 +685,7 @@
     <circle cx="520" cy="288" r="3.5" class="pad"/>
     <circle cx="600" cy="288" r="4" class="dot enc"/>
     <text x="528" y="283" text-anchor="start" class="silk enc">P0.20</text>
-    <text x="608" y="287" text-anchor="start" class="assign enc">EC12 B</text>
+    <text x="608" y="287" text-anchor="start" class="assign enc">SEN0235 B</text>
     <text x="608" y="299" text-anchor="start" class="alias">pro_micro 3</text>
   </g>
   <g>
@@ -756,14 +757,26 @@
         </tbody>
       </table>
       <table>
-        <caption>EC12 rotary encoder — right half</caption>
-        <thead><tr><th>EC12 leg</th><th>Silkscreen</th></tr></thead>
+        <caption>DFRobot SEN0235 encoder — right half</caption>
+        <thead><tr><th>SEN0235 pad</th><th>Goes to</th></tr></thead>
         <tbody>
+          <tr><td>VCC</td><td class="pin">VCC (3V bus)</td></tr>
+          <tr><td>GND</td><td class="pin">GND</td></tr>
           <tr><td>A</td><td class="pin">P0.17</td></tr>
           <tr><td>B</td><td class="pin">P0.20</td></tr>
-          <tr><td>C (common)</td><td class="pin">GND</td></tr>
-          <tr><td>SW leg 1</td><td class="pin">P0.08</td></tr>
-          <tr><td>SW leg 2</td><td class="pin">GND</td></tr>
+          <tr><td>C (button)</td><td class="pin">P0.08</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <caption>5-way navigation switch (Adafruit 504) — right half</caption>
+        <thead><tr><th>Switch leg</th><th>Goes to</th></tr></thead>
+        <tbody>
+          <tr><td>Common</td><td class="pin">P1.13 (COL 6)</td></tr>
+          <tr><td>Up</td><td class="pin">diode &rarr; ROW 0 &middot; P0.22</td></tr>
+          <tr><td>Down</td><td class="pin">diode &rarr; ROW 1 &middot; P0.24</td></tr>
+          <tr><td>Left</td><td class="pin">diode &rarr; ROW 2 &middot; P1.00</td></tr>
+          <tr><td>Right</td><td class="pin">diode &rarr; ROW 3 &middot; P0.11</td></tr>
+          <tr><td>Centre (press)</td><td class="pin">diode &rarr; ROW 4 &middot; P1.04</td></tr>
         </tbody>
       </table>
       <table>
@@ -777,6 +790,205 @@
         </tbody>
       </table>
     </div>
+  </section>
+
+  <section id="five-way">
+    <h2>5-way navigation switch — right half</h2>
+    <p class="lede">
+      The Adafruit 504 is five switches that share one common leg. Wire the common to <code>P1.13</code>
+      and treat it as a seventh column: each direction leg gets its own diode, band toward the row, and
+      lands on one of the five row wires that are already there. The diodes keep the switch from ghosting
+      against the key matrix when you press a direction and a key together. The firmware reads these as key
+      positions 60&ndash;64.
+    </p>
+    <figure>
+      <svg viewBox="0 0 640 300" role="img" aria-label="5-way switch schematic. P1.13, column 6, runs down the left as the switch common. Five branches leave it: up, down, left, right and centre. Each passes through a switch contact, then a diode with its band toward the row, and ends on ROW 0 P0.22, ROW 1 P0.24, ROW 2 P1.00, ROW 3 P0.11 and ROW 4 P1.04 respectively.">
+    <text x="96" y="22" text-anchor="middle" class="silk col">COL 6 · P1.13</text>
+    <text x="96" y="36" text-anchor="middle" class="mini-sub">switch common</text>
+    <line x1="96" y1="44" x2="96" y2="246" class="leader col" style="stroke-width:2.4"/>
+    <rect x="150" y="38" width="96" height="236" rx="8" fill="none" stroke="var(--line-strong)" stroke-dasharray="4 4"/>
+    <text x="198" y="292" text-anchor="middle" class="mini-sub">inside the Adafruit 504</text>
+    <text x="310" y="36" text-anchor="middle" class="mini-sub">diode, band &rarr; row</text>
+    <text x="480" y="36" class="mini-sub">existing row wires</text>
+    <g>
+      <line x1="96" y1="62" x2="170" y2="62" class="leader col"/>
+      <circle cx="96" cy="62" r="3.5" class="dot col"/>
+      <circle cx="174" cy="62" r="3.5" fill="none" class="schem-line"/>
+      <circle cx="216" cy="62" r="3.5" fill="none" class="schem-line"/>
+      <line x1="176" y1="59" x2="214" y2="48" class="schem-line"/>
+      <text x="195" y="80" text-anchor="middle" class="mini-sub">UP</text>
+      <line x1="220" y1="62" x2="300" y2="62" class="schem-line"/>
+      <polygon points="300,53 300,71 318,62" class="schem-fill"/>
+      <line x1="319" y1="53" x2="319" y2="71" class="schem-line"/>
+      <line x1="319" y1="62" x2="470" y2="62" class="leader row"/>
+      <circle cx="470" cy="62" r="4" class="dot row"/>
+      <text x="480" y="66" class="silk row">ROW 0</text>
+      <text x="540" y="66" class="assign row">P0.22</text>
+    </g>
+    <g>
+      <line x1="96" y1="108" x2="170" y2="108" class="leader col"/>
+      <circle cx="96" cy="108" r="3.5" class="dot col"/>
+      <circle cx="174" cy="108" r="3.5" fill="none" class="schem-line"/>
+      <circle cx="216" cy="108" r="3.5" fill="none" class="schem-line"/>
+      <line x1="176" y1="105" x2="214" y2="94" class="schem-line"/>
+      <text x="195" y="126" text-anchor="middle" class="mini-sub">DOWN</text>
+      <line x1="220" y1="108" x2="300" y2="108" class="schem-line"/>
+      <polygon points="300,99 300,117 318,108" class="schem-fill"/>
+      <line x1="319" y1="99" x2="319" y2="117" class="schem-line"/>
+      <line x1="319" y1="108" x2="470" y2="108" class="leader row"/>
+      <circle cx="470" cy="108" r="4" class="dot row"/>
+      <text x="480" y="112" class="silk row">ROW 1</text>
+      <text x="540" y="112" class="assign row">P0.24</text>
+    </g>
+    <g>
+      <line x1="96" y1="154" x2="170" y2="154" class="leader col"/>
+      <circle cx="96" cy="154" r="3.5" class="dot col"/>
+      <circle cx="174" cy="154" r="3.5" fill="none" class="schem-line"/>
+      <circle cx="216" cy="154" r="3.5" fill="none" class="schem-line"/>
+      <line x1="176" y1="151" x2="214" y2="140" class="schem-line"/>
+      <text x="195" y="172" text-anchor="middle" class="mini-sub">LEFT</text>
+      <line x1="220" y1="154" x2="300" y2="154" class="schem-line"/>
+      <polygon points="300,145 300,163 318,154" class="schem-fill"/>
+      <line x1="319" y1="145" x2="319" y2="163" class="schem-line"/>
+      <line x1="319" y1="154" x2="470" y2="154" class="leader row"/>
+      <circle cx="470" cy="154" r="4" class="dot row"/>
+      <text x="480" y="158" class="silk row">ROW 2</text>
+      <text x="540" y="158" class="assign row">P1.00</text>
+    </g>
+    <g>
+      <line x1="96" y1="200" x2="170" y2="200" class="leader col"/>
+      <circle cx="96" cy="200" r="3.5" class="dot col"/>
+      <circle cx="174" cy="200" r="3.5" fill="none" class="schem-line"/>
+      <circle cx="216" cy="200" r="3.5" fill="none" class="schem-line"/>
+      <line x1="176" y1="197" x2="214" y2="186" class="schem-line"/>
+      <text x="195" y="218" text-anchor="middle" class="mini-sub">RIGHT</text>
+      <line x1="220" y1="200" x2="300" y2="200" class="schem-line"/>
+      <polygon points="300,191 300,209 318,200" class="schem-fill"/>
+      <line x1="319" y1="191" x2="319" y2="209" class="schem-line"/>
+      <line x1="319" y1="200" x2="470" y2="200" class="leader row"/>
+      <circle cx="470" cy="200" r="4" class="dot row"/>
+      <text x="480" y="204" class="silk row">ROW 3</text>
+      <text x="540" y="204" class="assign row">P0.11</text>
+    </g>
+    <g>
+      <line x1="96" y1="246" x2="170" y2="246" class="leader col"/>
+      <circle cx="96" cy="246" r="3.5" class="dot col"/>
+      <circle cx="174" cy="246" r="3.5" fill="none" class="schem-line"/>
+      <circle cx="216" cy="246" r="3.5" fill="none" class="schem-line"/>
+      <line x1="176" y1="243" x2="214" y2="232" class="schem-line"/>
+      <text x="195" y="264" text-anchor="middle" class="mini-sub">CENTRE</text>
+      <line x1="220" y1="246" x2="300" y2="246" class="schem-line"/>
+      <polygon points="300,237 300,255 318,246" class="schem-fill"/>
+      <line x1="319" y1="237" x2="319" y2="255" class="schem-line"/>
+      <line x1="319" y1="246" x2="470" y2="246" class="leader row"/>
+      <circle cx="470" cy="246" r="4" class="dot row"/>
+      <text x="480" y="250" class="silk row">ROW 4</text>
+      <text x="540" y="250" class="assign row">P1.04</text>
+    </g>
+      </svg>
+      <figcaption>Same convention as every key: column &rarr; switch &rarr; diode &rarr; row. Adafruit does not
+        publish which leg is which direction, so find the common with a continuity beep (it connects to every
+        other leg when that direction is pressed) and map the rest before you solder. If a direction comes
+        out wrong in use, swap it in the keymap rather than rewiring.</figcaption>
+    </figure>
+
+    <figure>
+      <svg viewBox="0 0 760 520" role="img" aria-label="Wiring the 5-way breakout board to the right half nice!nano. The breakout has six plated holes along its bottom edge: R0 to R4 and COL. R0 to R4 run to the right half nice!nano pins P0.22, P0.24, P1.00, P0.11 and P1.04, which are matrix rows 0 to 4. COL runs to P1.13. The row wires can instead join their row anywhere along the row.">
+<path d="M40,60 L240.025,60 L240.025,93.075 A22.05,22.05 0 0 1 240.025,137.175 L240.025,215.13750000000002 L40,215.13750000000002 L40,137.175 A22.05,22.05 0 0 1 40,93.075 Z" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/>
+<circle cx="40" cy="115.125" r="11.55" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.2"/>
+<circle cx="240.025" cy="115.125" r="11.55" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.2"/>
+<rect x="87.51249999999999" y="62.625" width="105.0" height="105.0" fill="none" stroke="var(--spare)" stroke-dasharray="4 3"/>
+<circle cx="140.0125" cy="115.125" r="26.25" fill="none" stroke="var(--spare)" stroke-dasharray="3 3"/>
+<text x="140.0125" y="119.125" text-anchor="middle" class="mini-sub">5-way</text>
+<text x="140.0125" y="48" text-anchor="middle" class="mini-title">BREAKOUT · TOP VIEW</text>
+<text x="140.0125" y="34" text-anchor="middle" class="mini-sub">5 diodes on the underside</text>
+<rect x="506" y="30" width="148" height="400" rx="8" class="boardbody"/>
+<rect x="555.0" y="18" width="50" height="18" rx="3" class="usbnotch"/>
+<text x="580.0" y="30" text-anchor="middle" class="usblabel">USB-C</text>
+<text x="580.0" y="240" text-anchor="middle" class="boardlabel" transform="rotate(-90 580.0 240)">nice!nano · RIGHT · bottom view</text>
+<circle cx="520" cy="70" r="4" class="pad"/>
+<text x="528" y="74" text-anchor="start" class="mini-face" style="opacity:.45">RAW</text>
+<circle cx="640" cy="70" r="4" class="pad"/>
+<text x="632" y="74" text-anchor="end" class="mini-face" style="opacity:.45">P0.06</text>
+<circle cx="520" cy="100" r="4" class="pad"/>
+<text x="528" y="104" text-anchor="start" class="mini-face" style="opacity:.45">GND</text>
+<circle cx="640" cy="100" r="4" class="pad"/>
+<text x="632" y="104" text-anchor="end" class="mini-face" style="opacity:.45">P0.08</text>
+<circle cx="520" cy="130" r="4" class="pad"/>
+<text x="528" y="134" text-anchor="start" class="mini-face" style="opacity:.45">RST</text>
+<circle cx="640" cy="130" r="4" class="pad"/>
+<text x="632" y="134" text-anchor="end" class="mini-face" style="opacity:.45">GND</text>
+<circle cx="520" cy="160" r="4" class="pad"/>
+<text x="528" y="164" text-anchor="start" class="mini-face" style="opacity:.45">VCC</text>
+<circle cx="640" cy="160" r="4" class="pad"/>
+<text x="632" y="164" text-anchor="end" class="mini-face" style="opacity:.45">GND</text>
+<circle cx="520" cy="190" r="4" class="pad"/>
+<text x="528" y="194" text-anchor="start" class="mini-face" style="opacity:.45">P0.31</text>
+<circle cx="640" cy="190" r="4" class="pad"/>
+<text x="632" y="194" text-anchor="end" class="mini-face" style="opacity:.45">P0.17</text>
+<circle cx="520" cy="220" r="4" class="pad"/>
+<text x="528" y="224" text-anchor="start" class="mini-face" style="opacity:.45">P0.29</text>
+<circle cx="640" cy="220" r="4" class="pad"/>
+<text x="632" y="224" text-anchor="end" class="mini-face" style="opacity:.45">P0.20</text>
+<circle cx="520" cy="250" r="4" class="pad"/>
+<text x="528" y="254" text-anchor="start" class="mini-face" style="opacity:.45">P0.02</text>
+<circle cx="640" cy="250" r="4" class="pad"/>
+<text x="632" y="254" text-anchor="end" class="mini-face" style="">P0.22</text>
+<circle cx="520" cy="280" r="4" class="pad"/>
+<text x="528" y="284" text-anchor="start" class="mini-face" style="opacity:.45">P1.15</text>
+<circle cx="640" cy="280" r="4" class="pad"/>
+<text x="632" y="284" text-anchor="end" class="mini-face" style="">P0.24</text>
+<circle cx="520" cy="310" r="4" class="pad"/>
+<text x="528" y="314" text-anchor="start" class="mini-face" style="">P1.13</text>
+<circle cx="640" cy="310" r="4" class="pad"/>
+<text x="632" y="314" text-anchor="end" class="mini-face" style="">P1.00</text>
+<circle cx="520" cy="340" r="4" class="pad"/>
+<text x="528" y="344" text-anchor="start" class="mini-face" style="opacity:.45">P1.11</text>
+<circle cx="640" cy="340" r="4" class="pad"/>
+<text x="632" y="344" text-anchor="end" class="mini-face" style="">P0.11</text>
+<circle cx="520" cy="370" r="4" class="pad"/>
+<text x="528" y="374" text-anchor="start" class="mini-face" style="opacity:.45">P0.10</text>
+<circle cx="640" cy="370" r="4" class="pad"/>
+<text x="632" y="374" text-anchor="end" class="mini-face" style="">P1.04</text>
+<circle cx="520" cy="400" r="4" class="pad"/>
+<text x="528" y="404" text-anchor="start" class="mini-face" style="opacity:.45">P0.09</text>
+<circle cx="640" cy="400" r="4" class="pad"/>
+<text x="632" y="404" text-anchor="end" class="mini-face" style="opacity:.45">P1.06</text>
+<polyline points="87.51249999999999,190.72500000000002 87.51249999999999,490 730,490 730,250 640,250" fill="none" class="leader row" style="stroke-width:2;fill:none"/>
+
+<polyline points="108.51249999999999,190.72500000000002 108.51249999999999,480 720,480 720,280 640,280" fill="none" class="leader row" style="stroke-width:2;fill:none"/>
+
+<polyline points="129.5125,190.72500000000002 129.5125,470 710,470 710,310 640,310" fill="none" class="leader row" style="stroke-width:2;fill:none"/>
+
+<polyline points="150.5125,190.72500000000002 150.5125,460 700,460 700,340 640,340" fill="none" class="leader row" style="stroke-width:2;fill:none"/>
+
+<polyline points="171.5125,190.72500000000002 171.5125,450 690,450 690,370 640,370" fill="none" class="leader row" style="stroke-width:2;fill:none"/>
+
+
+
+
+
+
+<polyline points="192.5125,190.72500000000002 192.5125,233.13750000000002 480,233.13750000000002 480,310 520,310" fill="none" class="leader col" style="stroke-width:2;fill:none"/>
+<text x="474" y="304" text-anchor="end" class="mini-sub" style="fill:var(--col)">COL 6</text>
+<circle cx="87.51249999999999" cy="190.72500000000002" r="5" fill="var(--panel)" stroke="var(--row)" stroke-width="2"/>
+<text x="87.51249999999999" y="212.13750000000002" text-anchor="middle" class="mini-pin" style="font-size:8.5px">R0</text>
+<circle cx="108.51249999999999" cy="190.72500000000002" r="5" fill="var(--panel)" stroke="var(--row)" stroke-width="2"/>
+<text x="108.51249999999999" y="212.13750000000002" text-anchor="middle" class="mini-pin" style="font-size:8.5px">R1</text>
+<circle cx="129.5125" cy="190.72500000000002" r="5" fill="var(--panel)" stroke="var(--row)" stroke-width="2"/>
+<text x="129.5125" y="212.13750000000002" text-anchor="middle" class="mini-pin" style="font-size:8.5px">R2</text>
+<circle cx="150.5125" cy="190.72500000000002" r="5" fill="var(--panel)" stroke="var(--row)" stroke-width="2"/>
+<text x="150.5125" y="212.13750000000002" text-anchor="middle" class="mini-pin" style="font-size:8.5px">R3</text>
+<circle cx="171.5125" cy="190.72500000000002" r="5" fill="var(--panel)" stroke="var(--row)" stroke-width="2"/>
+<text x="171.5125" y="212.13750000000002" text-anchor="middle" class="mini-pin" style="font-size:8.5px">R4</text>
+<circle cx="192.5125" cy="190.72500000000002" r="5" fill="var(--panel)" stroke="var(--col)" stroke-width="2"/>
+<text x="192.5125" y="212.13750000000002" text-anchor="middle" class="mini-pin" style="font-size:8.5px">COL</text>
+</svg>
+      <figcaption><b>Using the breakout board.</b> The diodes are already on the breakout, so it takes six wires and nothing else.
+        <b>COL</b> gets its own wire to <code>P1.13</code>. <b>R0&ndash;R4</b> each join their row. The drawing runs them to the
+        row pins on the nice!nano, but a row is one continuous wire, so you can tap it anywhere along its length: the nearest key's
+        row joint is usually shorter. Use 26&ndash;28&nbsp;AWG stranded wire, through the plated holes.</figcaption>
+    </figure>
   </section>
 
   <section class="mechanism">
@@ -908,7 +1120,7 @@
           address the same physical pin. Pick one and stay with it across your matrix transform, encoder and
           display nodes — mixing them in one file is where wiring bugs hide.</li>
         <li><b>Nothing lands on an inner hole any more.</b> Revision 1 pushed nice!view MOSI to
-          <code>P1.01</code> and the EC12 switch to <code>P1.02</code> on the grounds that the right half's
+          <code>P1.01</code> and the encoder push button to <code>P1.02</code> on the grounds that the right half's
           18-pin edge header was full. It was not — that half used 15 of 18, and <code>P1.13</code>,
           <code>P0.06</code> and <code>P0.08</code> were free. Revision 2 puts both signals on header pins and
           leaves <code>P1.01</code>, <code>P1.02</code> and <code>P1.07</code> spare. They are ordinary plated
@@ -918,8 +1130,12 @@
           alone.)</li>
         <li><b>TPS65 RDY is optional.</b> Some Azoteq TPS65 breakouts don't expose a data-ready line — if yours
           doesn't, leave P1.11 unused on the left half and poll the trackpad over I&sup2;C instead.</li>
-        <li><b>EC12 leg order varies by part.</b> Confirm which of the five legs is the shared common (C) with a
-          continuity beep before soldering — on most EC12s it's the centre pin of each 3-pin group, but check yours.</li>
+        <li><b>The SEN0235 is a breakout, not a bare encoder.</b> Its five pads are labelled VCC, GND, A, B and C
+          (C is the push button; DFRobot's schematic calls the same net D). The board wires the encoder's common and the
+          button's return internally, so you only run its GND pad to ground; there are no separate common legs. Power it from
+          <code>VCC</code>, not <code>RAW</code>: it runs on 3.3&nbsp;V, and its signal pins must not see more than the
+          nice!nano's 3.3&nbsp;V. It has 20 detents, so the firmware uses <code>steps = &lt;80&gt;</code> and
+          <code>triggers-per-rotation = &lt;20&gt;</code>.</li>
         <li><b>Thick battery wire will not fit <code>B+</code>/<code>B&minus;</code>.</b> Those two holes are
           smaller than the header ones. You do not have to thread the wire through: tin the ring around the hole,
           tin the lead, and solder the wire flat against it, then anchor the wire to the board so nothing tugs the
@@ -929,7 +1145,7 @@
         <li><b>Battery polarity is not user-serviceable.</b> Double-check +/&minus; against the
           <code>B+</code>/<code>B&minus;</code> silkscreen before connecting — reversed polarity can damage the
           charge circuit.</li>
-        <li><b>Diode direction must be consistent across all 60 keys</b> (30 per half) and must match the
+        <li><b>Diode direction must be consistent across all 65 switches</b> (30 keys on the left; 30 keys plus the five 5-way contacts on the right) and must match the
           <code>diode-direction</code> setting in your ZMK matrix transform, or every key will appear to do nothing.</li>
       </ul>
     </div>

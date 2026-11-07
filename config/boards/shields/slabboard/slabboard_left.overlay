@@ -138,7 +138,9 @@
  *    resolved at PRESS time, so a single click or drag survives an empty list.
  *    But pressing a second button while holding the first would fall through
  *    to the base layer and type a letter. Listing 25..29 (A S D F G) closes
- *    that at no cost.
+ *    that at no cost. 60..64 are the right half's 5-way switch, which
+ *    scrolls on this layer -- without them the first scroll would drop the
+ *    layer and the rest would arrive as arrow keys.
  *
  * Layer 4 is also bound to &mo 4 on the right thumb for deliberate use.
  */
@@ -147,7 +149,7 @@
         compatible = "zmk,input-processor-temp-layer";
         #input-processor-cells = <2>;
         require-prior-idle-ms = <800>;
-        excluded-positions = <25 26 27 28 29>;
+        excluded-positions = <25 26 27 28 29 60 61 62 63 64>;
     };
 };
 

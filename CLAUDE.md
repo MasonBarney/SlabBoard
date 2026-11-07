@@ -23,6 +23,12 @@ the published wiring diagram exactly.
   **left** half. Both directions verified on hardware: reversing the right instead
   made the right hand type backwards, and leaving neither reversed made the left do
   the same.
+- **5-way navigation switch** (right only, Adafruit 504): a 7th column, COL 12 on
+  `P1.13`, wired to the switch's common; each of the five contacts goes through its
+  own diode to one of the shared rows (ROW 0 up, 1 down, 2 left, 3 right, 4 centre).
+  One GPIO instead of five, and `P1.13` is spare on the right in both revision 1 and
+  revision 2. Keymap positions **60-64**, appended after the 60 keys so existing
+  indices did not move; transform is `columns = <13>`. Not yet verified on hardware.
 - **Split**: BLE, **left half is central**
 - **Encoder** (right only): EC12, A `P0.17` / B `P0.20`; `disabled` in the dtsi,
   enabled in `slabboard_right.overlay`
@@ -39,8 +45,8 @@ the published wiring diagram exactly.
   `P0.17`/`P0.20` are I²C on the left and encoder A/B on the right; each half
   only enables its own.
 - **RGB underglow**: none. This board has no LEDs.
-- **Keymap**: `config/slabboard.keymap` — 4 layers (Base / Lower / Raise / Adjust),
-  60 bindings each, encoder sensor-binding per layer
+- **Keymap**: `config/slabboard.keymap` — 5 layers (Base / Lower / Raise / Adjust /
+  Mouse), 65 bindings each (60 keys + the 5-way switch), encoder sensor-binding per layer
 
 ## Pinned revisions
 
@@ -59,8 +65,8 @@ fix when split halves will not pair.
 
 - **EC12 push switch.** Revision 1 documents it on the `P1.02` inner hole,
   revision 2 (`docs/`) on `P0.08`. Either way the 5×6 grid is full, so the switch
-  cannot live in the matrix; it needs a `zmk,kscan-gpio-direct` plus
-  `kscan-composite` and a 61st keymap position.
+  cannot live in the existing columns. Cheapest route now: a second extra column
+  (one more GPIO, one diode), the same trick the 5-way switch uses on COL 12.
 
 ## Other shields here
 
@@ -253,10 +259,12 @@ transform, rather than permuting flags. And mind the ordering trap -- in
 first and the inverts are tested against the **post-swap** code, so with `XY_SWAP`
 set, `X_INVERT` negates what started as the Y value.
 
-## Known bug: the encoder over-triggers 4×
+## Fixed: the encoder over-triggered 4×
 
-`slabboard.dtsi` has `steps = <30>` and `triggers-per-rotation = <30>`. That fires the
-bound behaviour **four times per physical detent**, whatever encoder is fitted.
+`slabboard.dtsi` had `steps = <30>` and `triggers-per-rotation = <30>`, which fired the
+bound behaviour **four times per physical detent**. Now `80` / `20` for the fitted
+DFRobot SEN0235 (20 detents), as of the `five-way-switch` branch. Not yet verified on
+hardware.
 
 `steps` is **quadrature transitions per revolution — 4 × the detent count**, not the
 datasheet's "pulses per revolution." ZMK's config reference calls it *"Number of
